@@ -23,7 +23,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)  // 기본 세팅값인 200, 401, 402 등을 사용하지 않는다
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.java.Outflearn.controller"))  // api 스펙이 작성되어 있는 패키지 (Controller) 를 지정
+                .apis(RequestHandlerSelectors.basePackage("com.spring.Outflearn.controller"))  // api 스펙이 작성되어 있는 패키지 (Controller) 를 지정
                 .paths(PathSelectors.any()) // controller package 전부
 //                .paths(PathSelectors.ant("/v1/**"))       // Controller 패키지 내 v1만 선택해서 할수도 있음
                 .build()

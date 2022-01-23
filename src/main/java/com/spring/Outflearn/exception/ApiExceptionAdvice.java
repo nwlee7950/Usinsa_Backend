@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 @RequiredArgsConstructor
-@RestControllerAdvice(basePackages = {"com.java.Outflearn.controller.api.v1"})
+@RestControllerAdvice(basePackages = {"com.spring.Outflearn.controller.api.v1"})
 @Slf4j
 public class ApiExceptionAdvice {
     protected final ApiResponseService responseService;
