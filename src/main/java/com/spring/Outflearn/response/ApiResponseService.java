@@ -11,12 +11,12 @@ public class ApiResponseService {
         SingleResponse<T> result = new SingleResponse<>();
         result.setData(data);
         setSuccessResult(result);
-        return resuistResponse<T> getListResult(List<T> list) {
-            ListResponse<T> resullt;
+        return result;
     }
 
     // 복수건 결과 처리 메서드
-    public <T> Lt = new ListResponse<>();
+    public <T> ListResponse<T> getListResult(List<T> list) {
+        ListResponse<T> result = new ListResponse<>();
         result.setList(list);
         setSuccessResult(result);
         return result;
