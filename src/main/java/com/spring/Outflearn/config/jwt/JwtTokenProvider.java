@@ -41,7 +41,7 @@ public class JwtTokenProvider {
     // Jwt 토큰 DTO 생성
     public TokenDto createTokenDto(long userPk, List<String> roles) {
         System.out.println("secretKey = " + secretKey);
-        // Claims 에 user 구분을 위한 User pk(username) 및 authorities 목록 삽입
+        // Claims 에 user 구분을 위한 User pk(userId) 및 authorities 목록 삽입
         Claims claims = Jwts.claims().setSubject(Long.toString(userPk));
         claims.put(ROLES, roles);
 
@@ -96,11 +96,12 @@ public class JwtTokenProvider {
         }
     }
 
-    // Request 의 Header 에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
+    // Request 의 Header 에서 token 파싱 : "X-AUTH-TOKEN: Access Token"
     public String resolveAccessToken(HttpServletRequest req) {
         return req.getHeader("X-AUTH-TOKEN");
     }
 
+    // Request 의 Header 에서 token 파싱 : "REFRESH-TOKEN: Refresh Token"
     public String resolveRefreshToken(HttpServletRequest req) {
         return req.getHeader("REFRESH-TOKEN");
     }
