@@ -1,10 +1,10 @@
-package com.spring.outflearn;
+package com.spring.usinsa;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OutflearnApplicationTests {
+class UsinsaApplicationTests {
 
 	@Test
 	void contextLoads() {
