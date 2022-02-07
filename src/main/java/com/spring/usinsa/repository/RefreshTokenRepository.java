@@ -1,7 +1,7 @@
-package com.spring.outflearn.repository;
+package com.spring.usinsa.repository;
 
-import com.spring.outflearn.model.RefreshToken;
-import com.spring.outflearn.model.User;
+import com.spring.usinsa.model.RefreshToken;
+import com.spring.usinsa.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

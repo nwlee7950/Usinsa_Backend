@@ -1,4 +1,4 @@
-package com.spring.outflearn.config.jwt;
+package com.spring.usinsa.config.jwt;
 
 import lombok.Builder;
 import lombok.Getter;

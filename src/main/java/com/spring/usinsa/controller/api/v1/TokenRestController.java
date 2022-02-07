@@ -1,11 +1,11 @@
-package com.spring.outflearn.controller.api.v1;
+package com.spring.usinsa.controller.api.v1;
 
-import com.spring.outflearn.config.jwt.JwtTokenProvider;
-import com.spring.outflearn.config.jwt.TokenDto;
-import com.spring.outflearn.config.jwt.TokenRequestDto;
-import com.spring.outflearn.response.ApiResponseService;
-import com.spring.outflearn.response.SingleResponse;
-import com.spring.outflearn.service.TokenService;
+import com.spring.usinsa.config.jwt.JwtTokenProvider;
+import com.spring.usinsa.config.jwt.TokenDto;
+import com.spring.usinsa.config.jwt.TokenRequestDto;
+import com.spring.usinsa.serviceImpl.ApiResponseService;
+import com.spring.usinsa.response.SingleResponse;
+import com.spring.usinsa.service.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = {"2. Token refresh"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class TokenRestController {
 
     private final ApiResponseService apiResponseService;
@@ -26,7 +26,7 @@ public class TokenRestController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value = "토큰 재발급", notes = "Access Token 만료 시 자동으로 재발급 시켜줍니다.")
-    @PostMapping("/refresh")
+    @PostMapping("/refresh-token")
     public SingleResponse<TokenDto> refresh(HttpServletRequest request) {
 
         // Access Token, Refresh Token 값 추출
@@ -41,5 +41,4 @@ public class TokenRestController {
 
         return apiResponseService.getSingleResult(tokenDto);
     }
-
 }

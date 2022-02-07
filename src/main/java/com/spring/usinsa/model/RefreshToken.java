@@ -1,4 +1,4 @@
-package com.spring.outflearn.model;
+package com.spring.usinsa.model;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -22,15 +22,6 @@ public class RefreshToken extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String refreshToken;
-
-    @Column(nullable = false)
-
-
-    // Access Token 의 유효기간이 만료되었을 때 Refresh Token 이 유효하면 자동으로 변경
-    public RefreshToken updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-        return this;
-    }
 
     @Builder
     public RefreshToken(User user, String refreshToken) {

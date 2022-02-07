@@ -1,9 +1,9 @@
-package com.spring.outflearn.config.jwt;
+package com.spring.usinsa.config.jwt;
 
-import com.spring.outflearn.exception.ApiErrorCode;
-import com.spring.outflearn.exception.ApiException;
-import com.spring.outflearn.model.User;
-import com.spring.outflearn.serviceImpl.CustomUserDetailsService;
+import com.spring.usinsa.exception.ApiErrorCode;
+import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.User;
+import com.spring.usinsa.serviceImpl.CustomUserDetailsService;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
