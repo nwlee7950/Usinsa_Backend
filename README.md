@@ -1,19 +1,20 @@
-# 아웃프런 (Outflearn)
-### `인프런 클론 SPA 프로젝트`
+# 유신사 (Usinsa)
+### `무신사 클론 SPA 프로젝트`
 
 -------------------------------------
 
 # Tech-Stack
-## Backend
+## Backend (~ing)
 * Java 11
 * Spring Boot 2.6.3
-* MySQL
-* Spring Security
+* REST API
+* MySQL + MongoDB
+* Spring Security + Redis + JWT + OAuth2(네이버, 카카오, 구글)
 * Spring Data JPA
-* JWT 0.9.1
 * Swagger 3.0.0
+* Thymeleaf
 
-## Frontend
+## Frontend (예정)
 * React 5.0.0
 * TypeScript
 
@@ -21,4 +22,4 @@
 
 # Description
 
-### Spring Boot 와 React 를 연동한 인터넷 강의 쇼핑몰 '아웃프런' 의 REST API 서버
+### Spring Boot 와 React 를 연동한 쇼핑몰 '유신사' 의 REST API 서버입니다.
