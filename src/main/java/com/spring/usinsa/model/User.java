@@ -1,4 +1,4 @@
-package com.spring.outflearn.model;
+package com.spring.usinsa.model;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,39 +21,15 @@ import java.util.stream.Collectors;
 @Table(name = "user")
 public class User extends BaseTimeEntity implements UserDetails {
 
-//    @AllArgsConstructor
-//    @Getter
-//    public enum Role{
-////        SUPER_ADMIN("ROLE_SUPER_ADMIN"),
-////        ADMIN("ROLE_ADMIN");
-//        USER("ROLE_USER");
-//
-//        String value;
-//    }
-
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @CollectionTable(
-//            name="user_role",
-//            joinColumns=@JoinColumn(name="user_id")
-//    )
-//    @Column(name = "role")
-//    @Builder.Default
-//    private List<String> roles = new ArrayList<>();
-
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    public List<String> getRoles() {
-//        return roles;
-//    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private long id;
 
-    @Column(nullable = false, length = 100)
+    // 소셜 가입의 경우 일단 아이디 없이 회원가입 시켜야 하므로 username null 허용
+    @Column(length = 100)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    // 소셜 가입의 경우 비밀번호가 필요 없으므로 password null 허용
+    @Column(length = 100)
     private String password;
 
     @Email
@@ -63,6 +39,12 @@ public class User extends BaseTimeEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @Column
+    private String social;
+
+    @Column
+    private String socialId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
