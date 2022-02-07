@@ -7,6 +7,7 @@ import com.spring.usinsa.dto.UserLoginRequestDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.RefreshToken;
+import com.spring.usinsa.model.Social;
 import com.spring.usinsa.model.User;
 import com.spring.usinsa.repository.RefreshTokenRepository;
 import com.spring.usinsa.service.TokenService;
