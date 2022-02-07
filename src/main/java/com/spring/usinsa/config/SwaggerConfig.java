@@ -1,4 +1,4 @@
-package com.spring.outflearn.config;
+package com.spring.usinsa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)  // 기본 세팅값인 200, 401, 402 등을 사용하지 않는다
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.spring.outflearn.controller"))  // api 스펙이 작성되어 있는 패키지 (Controller) 를 지정
+                .apis(RequestHandlerSelectors.basePackage("com.spring.usinsa.controller"))  // api 스펙이 작성되어 있는 패키지 (Controller) 를 지정
                 .paths(PathSelectors.any()) // controller package 전부
 //                .paths(PathSelectors.ant("/v1/**"))       // Controller 패키지 내 v1만 선택해서 할수도 있음
                 .build()
@@ -42,9 +42,9 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Outflearn API Documentation")
-                .description("Outflearn 서버 API 설명을 위한 문서입니다.")
-                .license("Outflearn")
+                .title("Usinsa API Documentation")
+                .description("Usinsa 서버 API 설명을 위한 문서입니다.")
+                .license("Usinsa")
                 .version("1.0")
                 .build();
     }
