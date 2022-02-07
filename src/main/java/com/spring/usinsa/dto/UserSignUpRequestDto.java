@@ -1,6 +1,6 @@
-package com.spring.outflearn.dto;
+package com.spring.usinsa.dto;
 
-import com.spring.outflearn.model.User;
+import com.spring.usinsa.model.User;
 import lombok.*;
 
 import java.util.Collections;
