@@ -1,4 +1,4 @@
-package com.spring.outflearn.controller;
+package com.spring.usinsa.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

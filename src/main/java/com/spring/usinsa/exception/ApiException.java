@@ -1,4 +1,4 @@
-package com.spring.outflearn.exception;
+package com.spring.usinsa.exception;
 
 import lombok.Getter;
 

@@ -1,9 +1,9 @@
-package com.spring.outflearn.serviceImpl;
+package com.spring.usinsa.serviceImpl;
 
-import com.spring.outflearn.exception.ApiErrorCode;
-import com.spring.outflearn.exception.ApiException;
-import com.spring.outflearn.model.User;
-import com.spring.outflearn.repository.UserRepository;
+import com.spring.usinsa.exception.ApiErrorCode;
+import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.User;
+import com.spring.usinsa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

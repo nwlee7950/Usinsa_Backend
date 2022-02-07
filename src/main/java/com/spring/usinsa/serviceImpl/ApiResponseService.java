@@ -1,5 +1,9 @@
-package com.spring.outflearn.response;
+package com.spring.usinsa.serviceImpl;
 
+import com.spring.usinsa.response.CommonResponse;
+import com.spring.usinsa.response.CommonResponseConstant;
+import com.spring.usinsa.response.ListResponse;
+import com.spring.usinsa.response.SingleResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

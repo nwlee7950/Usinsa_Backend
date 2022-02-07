@@ -1,7 +1,7 @@
-package com.spring.outflearn.exception;
+package com.spring.usinsa.exception;
 
-import com.spring.outflearn.response.ApiResponseService;
-import com.spring.outflearn.response.CommonResponse;
+import com.spring.usinsa.serviceImpl.ApiResponseService;
+import com.spring.usinsa.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 @RequiredArgsConstructor
-@RestControllerAdvice(basePackages = {"com.spring.outflearn.controller.api.v1"})
+@RestControllerAdvice(basePackages = {"com.spring.usinsa.controller.api.v1"})
 @Slf4j
 public class ApiExceptionAdvice {
     protected final ApiResponseService responseService;

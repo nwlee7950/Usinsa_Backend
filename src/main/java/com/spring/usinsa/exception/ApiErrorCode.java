@@ -1,4 +1,4 @@
-package com.spring.outflearn.exception;
+package com.spring.usinsa.exception;
 
 import lombok.Getter;
 
@@ -38,6 +38,13 @@ public enum ApiErrorCode {
 
     // PLAN
     INVALID_PLAN(6000, "플랜을 다시 선택해주세요."),
+
+    // MINIO
+    MINIO_INVALID_UPLOAD_REQUEST(7000, "파일 업로드 중 오류가 발생하였습니다. 지속적인 오류가 발생할 시 관리자에게 문의해주시기 바랍니다."),
+    MINIO_INVALID_GET_REQUEST(7001, "파일을 가져오는 중 오류가 발생하였습니다. 지속적인 오류가 발생할 시 관리자에게 문의해주시기 바랍니다."),
+    MINIO_INVALID_REMOVE_REQUEST(7002, "기존 파일 삭제 중 오류가 발생하였습니다. 지속적인 오류가 발생할 시 관리자에게 문의해주시기 바랍니다."),
+    MINIO_INVALID_FILE_TYPE(7003, "파일 형식이 올바르지 않습니다."),
+
 
     TEMP(0, "TEMP");
 

@@ -1,4 +1,4 @@
-package com.spring.outflearn.model;
+package com.spring.usinsa.model;
 
 import lombok.Getter;
 import lombok.Setter;

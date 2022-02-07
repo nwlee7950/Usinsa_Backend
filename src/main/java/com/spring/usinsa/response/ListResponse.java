@@ -1,4 +1,4 @@
-package com.spring.outflearn.response;
+package com.spring.usinsa.response;
 
 import lombok.Getter;
 import lombok.Setter;
