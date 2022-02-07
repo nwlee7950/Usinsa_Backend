@@ -7,6 +7,7 @@ import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.VerificationCode;
 import com.spring.usinsa.repository.UserRepository;
+import com.spring.usinsa.service.UserProfileService;
 import com.spring.usinsa.service.UserService;
 import com.spring.usinsa.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
