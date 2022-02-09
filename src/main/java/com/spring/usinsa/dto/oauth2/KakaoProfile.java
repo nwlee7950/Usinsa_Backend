@@ -36,13 +36,4 @@ public class KakaoProfile {
 
         }
     }
-
-    public User toUserEntity() {
-        return User.builder()
-                .email(this.kakao_account.email)
-                .roles(Arrays.asList(User.Role.USER.getValue()))
-                .social(Social.SOCIAL_KAKAO.getValue())
-                .socialId(this.id)
-                .build();
-    }
 }
