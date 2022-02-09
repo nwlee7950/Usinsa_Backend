@@ -37,7 +37,6 @@ public class UserProfileServiceImpl implements UserProfileService {
                 .profileImage(userProfile.getProfileImage())
                 .nickname(userProfile.getNickname())
                 .job(userProfile.getJob())
-                .email(userProfile.getEmail())
                 .introduction(userProfile.getIntroduction())
                 .build();
     }
@@ -51,9 +50,6 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         if(userProfileUpdateRequestDto.getJob() != null)
             userProfile.setJob(userProfileUpdateRequestDto.getJob());
-
-        if(userProfileUpdateRequestDto.getEmail() != null)
-            userProfile.setEmail(userProfileUpdateRequestDto.getEmail());
 
         if(userProfileUpdateRequestDto.getIntroduction() != null)
             userProfile.setIntroduction(userProfileUpdateRequestDto.getIntroduction());

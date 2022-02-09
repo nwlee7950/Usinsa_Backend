@@ -70,7 +70,7 @@ public class OAuthServiceImpl implements OAuthService {
 
         User user = userService.findFirstBySocialAndSocialId(social, socialId);
 
-        // 이메일 주소가 다를 경우 바뀐 이메일로 최신화 (즉, 이전에 구글로 회원가입했지만, 구글 인증 이메일 주소가 바뀐 경우)
+        // 이메일 주소가 다를 경우 바뀐 이메일로 최신화 (즉, 이전에 구글로 회원가입했지만, 구글 계정 이메일 주소가 바뀐 경우)
         if(!email.equals(user.getEmail())) {
             user.setEmail(email);
             userService.save(user);

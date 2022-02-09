@@ -13,6 +13,5 @@ public class UserProfileUpdateRequestDto {
 
     private String nickname;
     private String job;
-    private String email;
     private String introduction;
 }

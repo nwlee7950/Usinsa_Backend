@@ -27,12 +27,6 @@ public class UserProfileRestController {
     private final ApiResponseService apiResponseService;
 
     @ApiOperation(value = "사용자 프로필 정보 출력, 미리보기 화면", notes = "사용자 프로필 정보(username, 프로필, 관심분야) 를 출력합니다. (미리보기 화면으로도 사용)")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK"),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-//            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
-//    })
     @GetMapping
     public SingleResponse<UserProfileResponseDto> getUserProfile(@AuthenticationPrincipal User user) {
 

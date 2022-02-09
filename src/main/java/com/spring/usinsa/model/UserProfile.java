@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 @Entity
 @Getter
@@ -18,9 +19,10 @@ import javax.persistence.Table;
 @Table(name = "user_profile")
 public class UserProfile {
 
+    // User ID 를 PK 로 가짐
     @Id
     @Column(name = "user_id")
-    private long userId;
+    private Long userId;
 
     @Column
     private String profileImage;
@@ -31,20 +33,16 @@ public class UserProfile {
     @Column(length = 30)
     private String job;
 
-    @Column(length = 30)
-    private String email;
-
     @Column
     private String introduction;
 
-    public UserProfile(long userId) {
+    public UserProfile(Long userId) {
         this.userId = userId;
     }
 
-    public UserProfile(long userId, String nickname, String email, String profileImage) {
+    public UserProfile(Long userId, String nickname, String profileImage) {
         this.userId = userId;
         this.nickname = nickname;
-        this.email = email;
         this.profileImage = profileImage;
     }
 }

@@ -37,6 +37,18 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column
     private int cartCount;
 
+    @Email
+    @Column(nullable = false, unique = true, length = 30)
+    private String email;
+
+    // 소셜명 (ex - usinsa, kakao, naver, google)
+    @Enumerated(EnumType.STRING)
+    private Social social;
+
+    // 소셜의 PK
+    @Column
+    private String socialId;
+
     @Column
     private boolean disable;
 
