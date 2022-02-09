@@ -1,5 +1,15 @@
 package com.spring.usinsa.controller.api.v1;
 
+import com.spring.usinsa.dto.oauth2.GoogleProfile;
+import com.spring.usinsa.dto.oauth2.KakaoProfile;
+import com.spring.usinsa.dto.oauth2.KakaoTokenDto;
+import com.spring.usinsa.dto.oauth2.NaverProfile;
+import com.spring.usinsa.exception.ApiErrorCode;
+import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.Social;
+import com.spring.usinsa.response.SingleResponse;
+import com.spring.usinsa.service.OAuthService;
+import com.spring.usinsa.serviceImpl.ApiResponseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +28,17 @@ public class OAuthRestController {
     private final ApiResponseService apiResponseService;
     private final OAuthService oAuthService;
 
+    // 사실 프론트가 인가코드를 통해 OAuth Access Token 을 얻고 REST API 서버는 이 토큰을 이용해서 사용자 정보만 가져오면 되지만
+    // 인가코드를 얻는 과정을 보여주기 위해 카카오 로그인만 인가코드 - Oauth Access Token - 사용자 정보 모든 과정을 백엔드에서 진행
     @ApiOperation(value = "카카오 로그인 리다이렉트", notes = "카카오 로그인 성공 후 리다이렉트되는 URL 입니다.")
-    @GetMapping("/kakao/login/client/redirect")
-    public SingleResponse<Object> authorization(@RequestParam String accessToken) {
+    @GetMapping("/kakao/login/redirect")
+    public SingleResponse<Object> authorization(@RequestParam String code) {
 
-//        // 인가코드로 토큰 받아오기
-//        KakaoTokenDto kakaoTokenDto = oAuthService.getKakaoTokenInfo(code);
+        // 인가코드로 토큰 받아오기
+        KakaoTokenDto kakaoTokenDto = oAuthService.getKakaoTokenInfo(code);
 
         // 토큰으로 사용자 정보 가져오기
-        KakaoProfile kakaoProfile = oAuthService.getKakaoProfile(accessToken);
+        KakaoProfile kakaoProfile = oAuthService.getKakaoProfile(kakaoTokenDto.getAccess_token());
 
         if(kakaoProfile == null) {
             throw new ApiException(ApiErrorCode.OAUTH_ERROR);

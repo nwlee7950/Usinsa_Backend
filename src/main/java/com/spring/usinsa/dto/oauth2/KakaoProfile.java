@@ -1,7 +1,7 @@
 package com.spring.usinsa.dto.oauth2;
 
-import kr.creativesoft.linkmix.model.Social;
-import kr.creativesoft.linkmix.model.User;
+import com.spring.usinsa.model.Social;
+import com.spring.usinsa.model.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -40,7 +40,6 @@ public class KakaoProfile {
     public User toUserEntity() {
         return User.builder()
                 .email(this.kakao_account.email)
-//                .roles(Collections.singletonList("ROLE_USER"))
                 .roles(Arrays.asList(User.Role.USER.getValue()))
                 .social(Social.SOCIAL_KAKAO.getValue())
                 .socialId(this.id)
