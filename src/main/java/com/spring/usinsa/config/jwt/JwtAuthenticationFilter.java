@@ -30,18 +30,24 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // Request Header ("REFRESH-TOKEN") 에서 Refresh Token 가져오기
         String refreshToken = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
 
-        // Access Token 유효성 검사
-        if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Token 없이 요청해야 하는 url 일 경우 (ex) 로그인 / 회원가입 / 비밀번호 찾기 등
+        if(!StringUtils.hasText(accessToken) && !StringUtils.hasText(refreshToken)) {
+            log.debug("Access Token and Refresh Token are null.");
         }
-        // 유효기간이 만료된 Access Token 일 경우, Refresh Token 을 통한 재발급이 필요하므로 Refresh Token 유효성 검사
-        else if(StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
-            log.debug("Access Token is invalid, but Refresh Token is valid.");
-        }
-        // 유효기간이 만료된 Access Token 만 있을 경우, Client 에 Refresh Token 을 같이 보내달라고 요청하는 예외 처리.
         else {
-            throw new ApiException(ApiErrorCode.INVALID_TOKEN);
+            // Access Token 유효성 검사
+            if (StringUtils.hasText(accessToken) && jwtTokenProvider.validateToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            // 유효기간이 만료된 Access Token 일 경우, Refresh Token 을 통한 재발급이 필요하므로 Refresh Token 유효성 검사
+            else if(StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
+                log.debug("Access Token is invalid, but Refresh Token is valid.");
+            }
+            // 유효기간이 만료된 Access Token 만 있을 경우, Client 에 Refresh Token 을 같이 보내달라고 요청하는 예외 처리.
+            else {
+                throw new ApiException(ApiErrorCode.INVALID_TOKEN);
+            }
         }
 
         filterChain.doFilter(request, response);
