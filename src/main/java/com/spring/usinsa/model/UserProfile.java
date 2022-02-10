@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @Entity
@@ -24,25 +21,18 @@ public class UserProfile {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column
-    private String profileImage;
+    @OneToOne
+    private Tier tier;
 
-    @Column(length = 30)
-    private String nickname;
+    private String birth;   // 생년월일
+    private String gender;  // 성별
+    private Long height;    // 키
+    private Long weight;    // 몸무게
+    private String refundAccount;   // 환불 계좌
 
-    @Column(length = 30)
-    private String job;
-
-    @Column
-    private String introduction;
 
     public UserProfile(Long userId) {
         this.userId = userId;
     }
 
-    public UserProfile(Long userId, String nickname, String profileImage) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.profileImage = profileImage;
-    }
 }

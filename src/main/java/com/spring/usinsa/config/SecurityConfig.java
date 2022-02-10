@@ -76,8 +76,6 @@ public class SecurityConfig{
     @RequiredArgsConstructor
     public static class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
-        private final JwtTokenProvider jwtTokenProvider;
-
         @Override
         public void configure(WebSecurity web) {
             web.ignoring().antMatchers("/css/**", "/images/**", "/js/**", "/scss/**", "/vendor/**");       // 인증을 무시할 경로
