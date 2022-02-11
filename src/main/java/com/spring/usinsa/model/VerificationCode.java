@@ -19,9 +19,8 @@ public class VerificationCode extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private long userId;
 
     @Column(nullable = false, length = 200)
     private String code;

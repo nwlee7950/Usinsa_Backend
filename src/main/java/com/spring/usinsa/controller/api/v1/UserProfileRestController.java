@@ -1,7 +1,6 @@
 package com.spring.usinsa.controller.api.v1;
 
-import com.spring.usinsa.dto.UserProfileResponseDto;
-import com.spring.usinsa.dto.UserProfileUpdateRequestDto;
+import com.spring.usinsa.dto.UserBodyUpdateRequestDto;
 import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.UserProfile;
 import com.spring.usinsa.response.SingleResponse;
@@ -26,47 +25,41 @@ public class UserProfileRestController {
     private final UserProfileService userProfileService;
     private final ApiResponseService apiResponseService;
 
-    @ApiOperation(value = "사용자 프로필 정보 출력, 미리보기 화면", notes = "사용자 프로필 정보(username, 프로필, 관심분야) 를 출력합니다. (미리보기 화면으로도 사용)")
+    @ApiOperation(value = "사용자 프로필 정보 출력", notes = "사용자 프로필 정보를 출력합니다.")
     @GetMapping
-    public SingleResponse<UserProfileResponseDto> getUserProfile(@AuthenticationPrincipal User user) {
+    public SingleResponse<UserProfile> getUserProfile(@AuthenticationPrincipal User user) {
 
         // 사용자 프로필 정보
         UserProfile userProfile = userProfileService.findByUserId(user.getId());
 
-        // 우선 UserProfile 정보만 ResponseDto 에 빌드
-        UserProfileResponseDto userProfileResponseDto = userProfileService.buildResponseDto(userProfile);
-
-        // 상단의 '내 주소' 에 들어갈 사용자 정보 빌드
-        userProfileResponseDto.setUser(user);
-
-        return apiResponseService.getSingleResult(userProfileResponseDto);
+        return apiResponseService.getSingleResult(userProfile);
     }
 
-    @ApiOperation(value = "사용자 프로필 등록 및 수정", notes = "사용자 프로필 정보를 등록 및 수정합니다.")
+    @ApiOperation(value = "사용자 키/몸무게 등록 및 수정", notes = "사용자 키/몸무게 정보를 등록 및 수정합니다.")
     @PostMapping
-    public SingleResponse<UserProfile> updateUserProfile(@AuthenticationPrincipal User user,
+    public SingleResponse<UserProfile> updateUserBody(@AuthenticationPrincipal User user,
                                                                     @ApiParam(value = "사용자 프로필 수정 요청 DTO", required = true)
-                                                                    @ModelAttribute UserProfileUpdateRequestDto userProfileUpdateRequestDto) {
+                                                                    @ModelAttribute UserBodyUpdateRequestDto userBodyUpdateRequestDto) {
 
-        // 사용자 프로필 정보
+        // 사용자 키/몸무게 정보
         UserProfile userProfile = userProfileService.findByUserId(user.getId());
 
-        // 사용자 프로필 정보 수정
-        UserProfile updatedUserProfile = userProfileService.updateUserProfile(userProfile, userProfileUpdateRequestDto);
+        // 사용자 키/몸무게 정보 등록/수정
+        UserProfile updatedUserProfile = userProfileService.upsertUserBody(userProfile, userBodyUpdateRequestDto);
 
         return apiResponseService.getSingleResult(updatedUserProfile);
     }
 
     @ApiOperation(value = "사용자 프로필 이미지 등록 및 수정", notes = "사용자 프로필 이미지를 등록 및 수정합니다.")
     @PostMapping("/images")
-    public SingleResponse<UserProfile> updateUserProfileImage(@AuthenticationPrincipal User user,
-                                                                    @ApiParam(value = "사용자 프로필 사진", required = true) MultipartFile profileImage) throws Exception {
+    public SingleResponse<UserProfile> upsertUserProfileImage(@AuthenticationPrincipal User user,
+                                                              @ApiParam(value = "사용자 프로필 사진", required = true) MultipartFile profileImage) throws Exception {
 
-        // 사용자 프로필 정보
+        // 사용자 프로필
         UserProfile userProfile = userProfileService.findByUserId(user.getId());
 
-        // 사용자 프로필 이미지 수정
-        UserProfile updatedUserProfile = userProfileService.updateUserProfileImage(userProfile, profileImage);
+        // 프로필 이미지 수정
+        UserProfile updatedUserProfile = userProfileService.upsertUserProfileImage(userProfile, profileImage);
 
         return apiResponseService.getSingleResult(updatedUserProfile);
     }

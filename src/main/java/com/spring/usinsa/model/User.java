@@ -26,10 +26,8 @@ public class User extends BaseTimeEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String username; // 소셜 가입의 경우 아이디 없이 회원가입 시켜야 하므로 username null 허용
     private String password; // 소셜 가입의 경우 비밀번호가 필요 없으므로 password null 허용
-    private String profileImage;
     private String name; // 실명
     private String nickname;
     private String phone;
@@ -39,10 +37,9 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Social social; // 소셜명 (ex - usinsa, kakao, naver, google)
-
-    private String socialId; // 소셜의 PK
-    private boolean disable; // 회원탈퇴 여부
+    private Social social; // 소셜명 (의 PK
+    private boolean disable; // 회원탈ex - usinsa, kakao, naver, google)
+    private String socialId; // 소셜퇴 여부
 
     @AllArgsConstructor
     @Getter

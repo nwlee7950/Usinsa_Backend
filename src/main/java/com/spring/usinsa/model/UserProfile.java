@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
 @Entity
 @Getter
@@ -24,6 +23,7 @@ public class UserProfile {
     @OneToOne
     private Tier tier;
 
+    private String profileImage;   // 프로필 이미지
     private String birth;   // 생년월일
     private String gender;  // 성별
     private Long height;    // 키

@@ -9,6 +9,6 @@ public interface MailService {
 
     void sendMail(EmailSendDto emailSendDto) throws MessagingException;
 
-    EmailSendDto setIdMailDto(String email, User user);
+    EmailSendDto setIdMailDto(String email, String username);
     EmailSendDto setPwMailDto(String email, String code);
 }

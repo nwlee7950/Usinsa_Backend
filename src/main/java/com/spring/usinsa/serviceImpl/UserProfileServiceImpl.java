@@ -1,7 +1,6 @@
 package com.spring.usinsa.serviceImpl;
 
-import com.spring.usinsa.dto.UserProfileResponseDto;
-import com.spring.usinsa.dto.UserProfileUpdateRequestDto;
+import com.spring.usinsa.dto.UserBodyUpdateRequestDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.UserProfile;
@@ -30,36 +29,20 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.save(userProfile);
     }
 
-    @Override
-    public UserProfileResponseDto buildResponseDto(UserProfile userProfile) {
-
-        return UserProfileResponseDto.builder()
-                .profileImage(userProfile.getProfileImage())
-                .nickname(userProfile.getNickname())
-                .job(userProfile.getJob())
-                .introduction(userProfile.getIntroduction())
-                .build();
-    }
 
     @Override
     @Transactional
-    public UserProfile updateUserProfile(UserProfile userProfile, UserProfileUpdateRequestDto userProfileUpdateRequestDto) {
+    public UserProfile upsertUserBody(UserProfile userProfile, UserBodyUpdateRequestDto userBodyUpdateRequestDto) {
 
-        if(userProfileUpdateRequestDto.getNickname() != null)
-            userProfile.setNickname(userProfileUpdateRequestDto.getNickname());
-
-        if(userProfileUpdateRequestDto.getJob() != null)
-            userProfile.setJob(userProfileUpdateRequestDto.getJob());
-
-        if(userProfileUpdateRequestDto.getIntroduction() != null)
-            userProfile.setIntroduction(userProfileUpdateRequestDto.getIntroduction());
+        userProfile.setHeight(userBodyUpdateRequestDto.getHeight());
+        userProfile.setWeight(userBodyUpdateRequestDto.getWeight());
 
         return userProfileRepository.save(userProfile);
     }
 
     @Override
     @Transactional
-    public UserProfile updateUserProfileImage(UserProfile userProfile, MultipartFile multipartFile) throws Exception {
+    public UserProfile upsertUserProfileImage(UserProfile userProfile, MultipartFile multipartFile) throws Exception {
 
 //        // 프로필 이미지 Upsert ( 기존 프로필 이미지가 있다면 삭제 후 재업로드 )
 //        String upsertedProfileImage = minioService.upsertFile(userProfile.getProfileImage(), PROFILE_FOLDER, multipartFile);

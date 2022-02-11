@@ -3,7 +3,6 @@ package com.spring.usinsa.serviceImpl;
 import com.spring.usinsa.dto.EmailSendDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
-import com.spring.usinsa.model.User;
 import com.spring.usinsa.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,8 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
 
-    private final String FIND_USERNAME_SUBJECT = "[아웃프런] 입력하신 이메일 주소로 가입된 아이디입니다.";
-    private final String FIND_PASSWORD_SUBJECT = "[아웃프런] 비밀번호 변경을 위한 주소입니다.";
+    private final String FIND_USERNAME_SUBJECT = "[유신사] 입력하신 이메일 주소로 가입된 아이디입니다.";
+    private final String FIND_PASSWORD_SUBJECT = "[유신사] 비밀번호 재설정을 위한 주소입니다.";
     private final String UPDATE_PASSWORD_URL = "<a href='http://localhost:8080/frontend-url?code={code}'>링크</a>";
     
     @Async
@@ -37,7 +36,7 @@ public class MailServiceImpl implements MailService {
         helper.setSubject(emailSendDto.getSubject());
         helper.setText(emailSendDto.getText(), true);
 
-//         파일 첨부
+//         파일 첨부 기능
 //        FileSystemResource file = new FileSystemResource(new File("C:\\Users\\creativesoft\\Pictures\\1.PNG"));
 //        helper.addAttachment("fileName", file);
 
@@ -51,11 +50,11 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public EmailSendDto setIdMailDto(String email, User user) {
+    public EmailSendDto setIdMailDto(String email, String username) {
         EmailSendDto emailSendDto = EmailSendDto.builder()
                 .to(email)
                 .subject(FIND_USERNAME_SUBJECT)
-                .text("입력하신 이메일로 가입된 아이디는 " + user.getUsername() + " 입니다.")
+                .text("입력하신 이메일로 가입된 아이디는 <h2>" + username + "<h2/> 입니다.")
                 .build();
 
         return emailSendDto;

@@ -12,6 +12,6 @@ import lombok.Setter;
 public class UserResetPasswordRequestDto {
 
     private String code;
-    private String new_password;
-    private String new_password_confirm;
+    private String newPassword;
+    private String newPasswordConfirm;
 }

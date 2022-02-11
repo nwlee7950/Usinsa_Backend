@@ -2,7 +2,6 @@ package com.spring.usinsa.serviceImpl;
 
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
-import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.VerificationCode;
 import com.spring.usinsa.repository.VerificationCodeRepository;
 import com.spring.usinsa.service.VerificationCodeService;
@@ -25,24 +24,20 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         VerificationCode verificationCode = verificationCodeRepository.findByCode(code)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.INVALID_PARAMS));
 
-        if (verificationCode.getUser() == null) {
-            throw new ApiException(ApiErrorCode.INVALID_PARAMS);
-        }
-
         return verificationCode;
     }
 
     @Override
     @Transactional
-    public VerificationCode createCode(User user) {
-        String secretCode = UUID.randomUUID().toString();
+    public VerificationCode createCode(Long userId) {
+        String code = UUID.randomUUID().toString();
 
         VerificationCode verificationCode = VerificationCode.builder()
-                .code(secretCode)
-                .user(user)
+                .code(code)
+                .userId(userId)
                 .build();
 
-        if(existsByCode(secretCode)) {
+        if(existsByCode(code)) {
             throw new ApiException(ApiErrorCode.SERVER_TRANSACTION_ERROR);
         }
 

@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailRequestDto {
+public class UserBodyUpdateRequestDto {
 
-    private String email;
+    private Long height;    // 키
+    private Long weight;    // 몸무게
 }

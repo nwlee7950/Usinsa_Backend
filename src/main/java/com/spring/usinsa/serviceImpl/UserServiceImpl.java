@@ -7,7 +7,6 @@ import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.VerificationCode;
 import com.spring.usinsa.repository.UserRepository;
-import com.spring.usinsa.service.UserProfileService;
 import com.spring.usinsa.service.UserService;
 import com.spring.usinsa.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +18,11 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserProfileService userProfileService;
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
 
     @Override
-    public User findByUsernameAndSocial(String username,String social) {
+    public User findFirstByUsernameAndSocial(String username, String social) {
         User user = userRepository.findByUsernameAndSocial(username, social)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.USERNAME_NOT_FOUND));
 
@@ -34,6 +32,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findFirstByEmail(String email) {
         User user = userRepository.findFirstByEmail(email)
+                .orElseThrow(() -> new ApiException(ApiErrorCode.EMAIL_NOT_FOUND));
+
+        return user;
+    }
+
+    @Override
+    public User findFirstByEmailAndName(String email, String name) {
+        User user = userRepository.findFirstByEmailAndName(email, name)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.EMAIL_NOT_FOUND));
 
         return user;
@@ -77,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(long userId) {
+    public User findById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.USERID_NOT_FOUND));
 
@@ -86,19 +92,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signUp(UserSignUpRequestDto userSignUpRequestDto) {
-        return null;
+        return userRepository.save(userSignUpRequestDto.toUserEntity(passwordEncoder));
     }
 
     @Override
-    public User resetPassword(User user, UserResetPasswordRequestDto userResetPasswordRequestDto) {
+    public User resetPassword(Long userId, UserResetPasswordRequestDto userResetPasswordRequestDto) {
 
         // 새로운 비밀번호, 새로운 비밀번호 확인 값 검사
-        if(!userResetPasswordRequestDto.getNew_password().equals(userResetPasswordRequestDto.getNew_password_confirm())) {
+        if(!userResetPasswordRequestDto.getNewPassword().equals(userResetPasswordRequestDto.getNewPasswordConfirm())) {
             throw new ApiException(ApiErrorCode.PASSWORD_NOT_EQUAL);
         }
 
+        User user = findById(userId);
+
         // 새로운 비밀번호로 사용자 비밀번호 재설정
-        user.setPassword((passwordEncoder.encode(userResetPasswordRequestDto.getNew_password())));
+        user.setPassword((passwordEncoder.encode(userResetPasswordRequestDto.getNewPassword())));
 
         // 사용자 저장
         User savedUser = save(user);
