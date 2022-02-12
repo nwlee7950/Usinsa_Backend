@@ -22,12 +22,12 @@ import com.spring.usinsa.util.GoogleUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -40,9 +40,8 @@ public class OAuthServiceImpl implements OAuthService {
 
     private final UserService userService;
     private final TokenService tokenService;
-    private final RestTemplate restTemplate;
+    private final WebClient webClient;
     private final GoogleUtils googleUtils;
-    private final Environment env;
     private final Gson gson;
 
     // KAKAO
@@ -54,6 +53,8 @@ public class OAuthServiceImpl implements OAuthService {
     private String kakaoTokenUrl;
     @Value("${spring.oauth.kakao.secret}")
     private String kakaoClientSecret;
+    @Value("${spring.oauth.kakao.url.profile}")
+    private String kakaoProfileUrl;
 
     // NAVER
     @Value("${spring.oauth.naver.client_id}")
@@ -98,70 +99,70 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public KakaoProfile getKakaoProfile(String accessToken) {
-        // Set header : Content-type: application/x-www-form-urlencoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        // Set http entity
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
+    public KakaoProfile getKakaoProfile(String accessToken) {;
         try {
-            // Request profile
-            ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.oauth.kakao.url.profile"), request, String.class);
-            System.out.println("response = " + response);
-            if (response.getStatusCode() == HttpStatus.OK)
-                return gson.fromJson(response.getBody(), KakaoProfile.class);
+            // 카카오 사용자 프로필 정보
+            String response = webClient.post()
+                    .uri(kakaoProfileUrl)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .retrieve() // 4xx, 5xx 에러 발생시 자동으로 예외 발생시킴. (토큰으로 사용자 프로필을 가져오지 못한 경우)
+                    .bodyToMono(String.class)   // body 만 가져옴
+                    .block();   // 동기 처리
+
+            return gson.fromJson(response, KakaoProfile.class);
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new ApiException(ApiErrorCode.OAUTH_ERROR);
         }
-        throw new ApiException(ApiErrorCode.INVALID_PARAMS);
     }
 
     @Override
     public NaverProfile getNaverProfile(String accessToken) {
-        // Set header : Content-type: plain/text
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_PLAIN);
-        headers.set("X-Naver-Client-Id", naverClientId);
-        headers.set("X-Naver-Client-Secret", naverSecret);
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        // Set http entity
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
         try {
-            // Request profile
-            ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.oauth.naver.url.profile"), request, String.class);
-            System.out.println("response = " + response);
-            if (response.getStatusCode() == HttpStatus.OK)
-                return gson.fromJson(response.getBody(), NaverProfile.class);
+            // 네이버 사용자 프로필 정보
+            String response = webClient.post()
+                    .uri(naverProfileUrl)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .header("X-Naver-Client-Id", naverClientId)
+                    .header("X-Naver-Client-Secret", naverSecret)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .retrieve() // 4xx, 5xx 에러 발생시 자동으로 예외 발생시킴. (토큰으로 사용자 프로필을 가져오지 못한 경우)
+                    .bodyToMono(String.class)   // body 만 가져옴
+                    .block();   // 동기 처리
+
+            return gson.fromJson(response, NaverProfile.class);
+
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw new ApiException(ApiErrorCode.OAUTH_ERROR);
         }
-        throw new ApiException(ApiErrorCode.INVALID_PARAMS);
     }
 
     @Override
     public KakaoTokenDto getKakaoTokenInfo(String code) {
-        // Set header : Content-type: application/x-www-form-urlencoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        // Set parameter
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", kakaoClientId);
-        params.add("redirect_uri", kakaoRedirect);
-        params.add("code", code);
-        params.add("client_secret", kakaoClientSecret);
-        // Set http entity
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(kakaoTokenUrl, request, String.class);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return gson.fromJson(response.getBody(), KakaoTokenDto.class);
-        }
 
-        // 인가코드로 토큰을 받아오지 못한 경우
-        return null;
+        try {
+            // 카카오 사용자 프로필 정보
+            String response = webClient.post()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(kakaoTokenUrl)
+                            .queryParam("grant_type", "authorization_code")
+                            .queryParam("client_id", "kakaoClientId")
+                            .queryParam("redirect_uri", "kakaoRedirect")
+                            .queryParam("code", "code")
+                            .queryParam("client_secret", "kakaoClientSecret")
+                            .build())
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .retrieve() // 4xx, 5xx 에러 발생시 자동으로 예외 발생시킴. (인가 코드로 토큰을 받아오지 못한 경우)
+                    .bodyToMono(String.class)   // body 만 가져옴
+                    .block();   // 동기 처리
+
+            return gson.fromJson(response, KakaoTokenDto.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ApiException(ApiErrorCode.OAUTH_ERROR);
+        }
     }
 
     @Override
@@ -219,43 +220,43 @@ public class OAuthServiceImpl implements OAuthService {
     @Override
     public GoogleProfile getGoogleProfile(String idToken) throws JsonProcessingException {
 
-        // JWT Token을 전달해 JWT 저장된 사용자 정보 확인
         String requestUrl = UriComponentsBuilder.fromHttpUrl(googleUtils.getGoogleAuthUrl() + "/tokeninfo").queryParam("id_token", idToken).toUriString();
 
-        String resultJson = restTemplate.getForObject(requestUrl, String.class);
+        // 토큰의 id_Token을 전달해 토큰에 저장된 구글 사용자 프로필 정보 확인
+        String response = webClient.get()
+                .uri(requestUrl)
+                .retrieve() // 4xx, 5xx 에러 발생시 자동으로 예외 발생시킴. (인가 코드로 토큰을 받아오지 못한 경우)
+                .bodyToMono(String.class)   // body 만 가져옴
+                .block();   // 동기 처리
 
-        if(resultJson == null)
+        if(response == null)
             throw new ApiException(ApiErrorCode.OAUTH_ERROR);
 
-        // ObjectMapper 를 통해 사용자 정보 JSON 데이터를 Object(GoogleProfile 객체) 로 변환
+        // ObjectMapper 를 통해 사용자 정보인 response 를 Object(GoogleProfile 객체) 로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // NULL이 아닌 값만 응답받기(NULL인 경우는 생략)
 
-        // 구글 사용자 정보
-        return objectMapper.readValue(resultJson, new TypeReference<GoogleProfile>() {});
+        return objectMapper.readValue(response, new TypeReference<GoogleProfile>() {});
     }
 
     @Override
     public Object checkProfile(String social, String socialId, String email, Object object) {
-        // 이미 소셜로 가입한 사용자일 경우
+        // 이미 해당 소셜로 가입한 사용자일 경우
         if(userService.existsBySocialAndSocialId(social, socialId)) {
             TokenDto tokenDto = oauthLogin(email, social, socialId);
             return tokenDto;
         }
 
-        // 해당 소셜로 회원가입한 이력이 없을 경우
-        else {
-            // 해당 이메일로 가입된 다른 소셜이 존재할 경우
-            if(userService.existsByEmail(email)) {
-                guideSocial(email);
-            }
-            // 해당 이메일, 소셜로 가입된 사용자가 없을 경우 (신규 회원)
-            else {
-                return object;
-            }
+        // 해당 이메일로 가입된 다른 소셜이 존재할 경우
+        else if(userService.existsByEmail(email)){
+            guideSocial(email);
+            return null;
         }
-        
-        return null;
+
+        // 해당 이메일, 소셜로 가입된 사용자가 없을 경우 (신규 회원)
+        else {
+            return object;
+        }
     }
 }
