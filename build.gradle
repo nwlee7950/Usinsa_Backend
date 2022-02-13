@@ -32,7 +32,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'	// WebClient
-	implementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly group: 'net.nurigo', name: 'javaSDK', version: '2.2'	// coolSMS (휴대폰 본인인증 메시지 발송용)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
