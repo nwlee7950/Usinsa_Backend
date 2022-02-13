@@ -1,14 +1,12 @@
 package com.spring.usinsa.serviceImpl;
 
 import com.spring.usinsa.dto.UserResetPasswordRequestDto;
-import com.spring.usinsa.dto.UserSignUpRequestDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.Social;
 import com.spring.usinsa.model.User;
-import com.spring.usinsa.model.VerificationCode;
 import com.spring.usinsa.repository.UserRepository;
 import com.spring.usinsa.service.UserService;
-import com.spring.usinsa.service.VerificationCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,10 +17,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final VerificationCodeService verificationCodeService;
+//    private final VerificationCodeService verificationCodeService;
 
     @Override
-    public User findFirstByUsernameAndSocial(String username, String social) {
+    public User findFirstByUsernameAndSocial(String username, Social social) {
         User user = userRepository.findByUsernameAndSocial(username, social)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.USERNAME_NOT_FOUND));
 
@@ -46,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findFirstByEmailAndSocial(String email, String social) {
+    public User findFirstByEmailAndSocial(String email, Social social) {
         User user = userRepository.findFirstByEmailAndSocial(email, social)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.EMAIL_NOT_FOUND));
 
@@ -54,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findFirstBySocialAndSocialId(String social, String socialId) {
+    public User findFirstBySocialAndSocialId(Social social, String socialId) {
         User user = userRepository.findFirstBySocialAndSocialId(social, socialId)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.EMAIL_NOT_FOUND));
 
@@ -72,14 +70,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsBySocialAndSocialId(String social, String socialId) {
+    public boolean existsBySocialAndSocialId(Social social, String socialId) {
         return userRepository.existsBySocialAndSocialId(social, socialId);
-    }
-
-
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
     }
 
     @Override
@@ -91,8 +83,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User signUp(UserSignUpRequestDto userSignUpRequestDto) {
-        return userRepository.save(userSignUpRequestDto.toUserEntity(passwordEncoder));
+    public User signUp(User user) {
+        if(existsByEmail(user.getEmail()))
+            throw new ApiException(ApiErrorCode.SIGNUP_EMAIL_DUPLICATED);
+
+        if(existsByUsername(user.getUsername()))
+            throw new ApiException(ApiErrorCode.SIGNUP_USERNAME_DUPLICATED);
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -109,12 +107,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword((passwordEncoder.encode(userResetPasswordRequestDto.getNewPassword())));
 
         // 사용자 저장
-        User savedUser = save(user);
+        User savedUser = userRepository.save(user);
 
-        VerificationCode verificationCode = verificationCodeService.findByCode(userResetPasswordRequestDto.getCode());
-
-        // 기존 Verification Code 삭제
-        verificationCodeService.delete(verificationCode);
+//        VerificationCode verificationCode = verificationCodeService.findByCode(userResetPasswordRequestDto.getCode());
+//
+//        // 기존 Verification Code 삭제
+//        verificationCodeService.delete(verificationCode);
 
         return savedUser;
     }

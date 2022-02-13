@@ -1,17 +1,12 @@
 package com.spring.usinsa.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @Entity
@@ -36,48 +31,24 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
+
     @Enumerated(EnumType.STRING)
-    private Social social; // 소셜명 (의 PK
-    private boolean disable; // 회원탈ex - usinsa, kakao, naver, google)
-    private String socialId; // 소셜퇴 여부
+    private Role role; // 회원 권한 (ex - user, admin, super_admin)
 
-    @AllArgsConstructor
-    @Getter
-    public enum Role{
-        SUPER_ADMIN("ROLE_SUPER_ADMIN"),
-        ADMIN("ROLE_ADMIN"),
-        USER("ROLE_USER");
+    @Enumerated(EnumType.STRING)
+    private Social social; // 소셜명 (ex - usinsa, kakao, naver, google)
+    private String socialId; // 소셜의 PK
+    private boolean disable; // 회원탈퇴 여부
 
-        String value;
-    }
-
-    // 사용자의 권한 리스트 기록용 테이블 (PK 없음)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name="user_role",
-            joinColumns=@JoinColumn(name="user_id")
-    )
-    @Column(name = "role")
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-    }
-    
     @Builder
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     @Override

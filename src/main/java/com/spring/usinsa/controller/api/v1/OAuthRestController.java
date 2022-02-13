@@ -45,7 +45,7 @@ public class OAuthRestController {
         }
 
         // 사용자 구분 (신규 회원인지, 기존 회원인지)
-        Object result = oAuthService.checkProfile(Social.SOCIAL_KAKAO.getValue(),
+        Object result = oAuthService.checkProfile(Social.KAKAO,
                 kakaoProfile.getId(),
                 kakaoProfile.getKakao_account().getEmail(),
                 kakaoProfile);
@@ -66,7 +66,7 @@ public class OAuthRestController {
         }
 
         // 사용자 구분 (신규 회원인지, 기존 회원인지)
-        Object result = oAuthService.checkProfile(Social.SOCIAL_NAVER.getValue(),
+        Object result = oAuthService.checkProfile(Social.NAVER,
                 naverProfile.getResponse().getId(),
                 naverProfile.getResponse().getEmail(),
                 naverProfile);
@@ -93,7 +93,7 @@ public class OAuthRestController {
             GoogleProfile googleProfile = oAuthService.getGoogleProfile(idToken);
 
             // 사용자 구분 (신규 회원인지, 기존 회원인지)
-            result = oAuthService.checkProfile(Social.SOCIAL_GOOGLE.getValue(),
+            result = oAuthService.checkProfile(Social.GOOGLE,
                     googleProfile.getSub(),
                     googleProfile.getEmail(),
                     googleProfile);

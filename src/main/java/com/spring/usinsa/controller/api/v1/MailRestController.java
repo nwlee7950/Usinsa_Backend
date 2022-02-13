@@ -43,7 +43,7 @@ public class MailRestController {
         User user = userService.findFirstByEmailAndName(findUsernameRequestDto.getEmail(), findUsernameRequestDto.getName());
         
         // 유신사에서 가입한 사용자가 아니라면 비밀번호 재설정 거부
-        if(!user.getSocial().equals(Social.SOCIAL_USINSA))
+        if(!user.getSocial().equals(Social.USINSA.getValue()))
             throw new ApiException(ApiErrorCode.NOT_USINSA_USER);
         
         // 아이디 이메일 양식 설정
@@ -60,7 +60,7 @@ public class MailRestController {
     public CommonResponse resetPassword(@RequestParam String username) throws MessagingException {
 
         // 사용자 검색
-        User user = userService.findFirstByUsernameAndSocial(username, Social.SOCIAL_USINSA.getValue());
+        User user = userService.findFirstByUsernameAndSocial(username, Social.USINSA);
 
         // 검증 코드 생성
         VerificationCode verificationCode = verificationCodeService.createCode(user.getId());

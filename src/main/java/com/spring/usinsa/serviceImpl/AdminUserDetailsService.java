@@ -26,12 +26,10 @@ public class AdminUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // email에 해당하는 정보를 데이터베이스에서 읽어 Member 객체에 저장한다.
-        User user = userService.findFirstByUsernameAndSocial(username, Social.SOCIAL_USINSA.getValue());
+        User user = userService.findFirstByUsernameAndSocial(username, Social.USINSA);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for(String role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getValue()));
 
         return user;
     }

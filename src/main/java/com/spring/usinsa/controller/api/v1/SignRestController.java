@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,8 @@ public class SignRestController {
     private final ApiResponseService apiResponseService;
     private final TokenService tokenService;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "로그인", notes = "아이디/비밀번호로 로그인합니다.")
     @PostMapping("/signin")
@@ -48,10 +51,10 @@ public class SignRestController {
             @ModelAttribute UserSignUpRequestDto userSignUpRequestDto) {
 
         // 회원가입
-        User savedUser = userService.signUp(userSignUpRequestDto);
+        User savedUser = userService.signUp(userSignUpRequestDto.toUserEntity(passwordEncoder));
 
         // JWT 토큰 발급
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRoles());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRole().getValue());
 
         return apiResponseService.getSingleResult(tokenDto);
     }
