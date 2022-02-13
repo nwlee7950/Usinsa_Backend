@@ -17,12 +17,7 @@ public class Tier {
     private Long id;
 
     // 티어명 (ex - BRONZE, SILVER, GOLD ... )
-    @Column
     private String title;
-
-    @Column
     private Long startScore;
-
-    @Column
     private Long endScore;
 }

@@ -34,7 +34,7 @@ public class TokenServiceImpl implements TokenService {
     public TokenDto login(UserLoginRequestDto userLoginRequestDto) {
         // 유신사 자체 로그인 (OAuth2 X)
         // 회원 정보 존재하는지 확인
-        User user = userService.findFirstByUsernameAndSocial(userLoginRequestDto.getUsername(), Social.SOCIAL_USINSA.getValue());
+        User user = userService.findFirstByUsernameAndSocial(userLoginRequestDto.getUsername(), Social.USINSA);
 
         // 회원 패스워드 일치 여부 확인
         if (!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword()))
@@ -73,7 +73,7 @@ public class TokenServiceImpl implements TokenService {
         refreshTokenRepository.delete(refreshToken);
 
         // 새로운 AccessToken, RefreshToken 토큰 재발급
-        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getId(), user.getRoles());
+        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getId(), user.getRole().getValue());
 
         // RefreshToken 저장
         RefreshToken newRefreshToken = RefreshToken.builder()
@@ -90,7 +90,7 @@ public class TokenServiceImpl implements TokenService {
     public TokenDto saveToken(User user) {
 
         // AccessToken, RefreshToken 발급
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getId(), user.getRoles());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getId(), user.getRole().getValue());
 
         // RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()

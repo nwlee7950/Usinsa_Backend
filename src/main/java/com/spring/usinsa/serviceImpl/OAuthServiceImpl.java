@@ -67,14 +67,14 @@ public class OAuthServiceImpl implements OAuthService {
     private String naverRedirectUrl;
 
     @Override
-    public TokenDto oauthLogin(String email, String social, String socialId) {
+    public TokenDto oauthLogin(String email, Social social, String socialId) {
 
         User user = userService.findFirstBySocialAndSocialId(social, socialId);
 
         // 이메일 주소가 다를 경우 바뀐 이메일로 최신화 (즉, 이전에 구글로 회원가입했지만, 구글 계정 이메일 주소가 바뀐 경우)
         if(!email.equals(user.getEmail())) {
             user.setEmail(email);
-            userService.save(user);
+            userService.signUp(user);
         }
 
         // 정상 로그인 처리 (Access Token, Refresh Token 발급)
@@ -88,11 +88,11 @@ public class OAuthServiceImpl implements OAuthService {
         User user = userService.findFirstByEmail(email);
 
         // 해당 이메일로 가입한 소셜 알림
-        if(Social.SOCIAL_USINSA.getValue().equals(user.getSocial()))
+        if(Social.USINSA.getValue().equals(user.getSocial()))
             throw new ApiException(ApiErrorCode.USINSA_USER);
-        else if(Social.SOCIAL_KAKAO.getValue().equals(user.getSocial()))
+        else if(Social.KAKAO.getValue().equals(user.getSocial()))
             throw new ApiException(ApiErrorCode.KAKAO_USER);
-        else if(Social.SOCIAL_NAVER.getValue().equals(user.getSocial()))
+        else if(Social.NAVER.getValue().equals(user.getSocial()))
             throw new ApiException(ApiErrorCode.NAVER_USER);
         else
             throw new ApiException(ApiErrorCode.GOOGLE_USER);
@@ -241,7 +241,7 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public Object checkProfile(String social, String socialId, String email, Object object) {
+    public Object checkProfile(Social social, String socialId, String email, Object object) {
         // 이미 해당 소셜로 가입한 사용자일 경우
         if(userService.existsBySocialAndSocialId(social, socialId)) {
             TokenDto tokenDto = oauthLogin(email, social, socialId);

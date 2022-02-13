@@ -7,10 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Social {
 
-    SOCIAL_USINSA("usinsa"),
-    SOCIAL_KAKAO("kakao"),
-    SOCIAL_NAVER("naver"),
-    SOCIAL_GOOGLE("google");
+    USINSA("usinsa"),
+    KAKAO("kakao"),
+    NAVER("naver"),
+    GOOGLE("google");
 
     private String value;
 }
