@@ -54,7 +54,8 @@ public class SignRestController {
         User savedUser = userService.signUp(userSignUpRequestDto.toUserEntity(passwordEncoder));
 
         // JWT 토큰 발급
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRole().getValue());
+//        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRole().getValue());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), "ADMIN");
 
         return apiResponseService.getSingleResult(tokenDto);
     }
