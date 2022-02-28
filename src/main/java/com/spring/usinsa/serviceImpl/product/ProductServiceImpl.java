@@ -8,25 +8,44 @@ import com.spring.usinsa.repository.ProductRepository;
 import com.spring.usinsa.service.BrandService;
 import com.spring.usinsa.service.ProductService;
 import com.spring.usinsa.service.SubCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.spring.usinsa.serviceImpl.MinioService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
-    BrandService brandService;
-    SubCategoryService subCategoryService;
+    private final ProductRepository productRepository;
+    private final BrandService brandService;
+    private final SubCategoryService subCategoryService;
+    private final MinioService minioService;
+
+    private final String PRODUCT_FOLDER = "product/";
 
     @Override
-    public Product save(ProductDto.Request productDto) {
+    public Product save(ProductDto.Request productDto) throws Exception {
+
+        // Product Title Image 추가 과정 이런 식임. SubCategory 도 추가 필요 및
+        // ProductDto.Request 에서 toProductEntity(Brand, SubCategory) 같이 변경하고 builder 도 수정 필요
+//        Brand brand = brandService.findById(productDto.getBrandId());
+//
+//        // 새로운 Product 객체 생성 후 Brand 설정
+//        Product product = productDto.toProductEntity(brand);
+//
+//        // 대표 이미지 Upsert
+//        String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
+//
+//        // TitleImage 설정
+//        product.setTitleImage(titleImage);
+//
+//        return productRepository.save(product);
+
         Product product = productDto.toProductEntity();
         product.setBrand(brandService.findById(productDto.getBrandId()));
         product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
@@ -104,7 +123,29 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product updateProduct(ProductDto.UpdateRequest productDto) {
+    public Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) {
+
+        // Product Title Image 수정 과정 이런 식임. SubCategory 도 추가 필요 및
+        // ProductDto.Request 에서 toProductEntity(Brand, SubCategory) 같이 변경하고 builder 도 수정 필요
+//
+//
+//        Product product = productService.findById(productDto.getId());
+//
+//        if(!(productRepository.existsById(productDto.getId())
+//                && productId.equals(productDto.getId()))) {
+//            throw new ApiException(ApiErrorCode.INVALID_PARAMS);
+//        }
+
+//        // 대표 이미지 설정
+//        String titleImage = minioService.upsertFile(product.getTitleImage(), PRODUCT_FOLDER, productDto.getTitleImage());
+//        product.setTitleImage(titleImage);
+//
+//        // 브랜드 설정
+//        Brand brand = brandService.findById(productDto.getBrandId());
+//        product.setBrand(brand);
+//
+//        return productRepository.save(product);
+
         Product product = findById(productDto.getId());
 
         product.setDeliveryInfo(productDto.getDeliveryInfo());
@@ -120,7 +161,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(long productId) {
+    public void deleteById(long productId) {
         productRepository.deleteById(productId);
     }
 

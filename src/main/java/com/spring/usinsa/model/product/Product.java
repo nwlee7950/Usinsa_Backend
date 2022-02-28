@@ -19,6 +19,10 @@ public class Product {
     private int price;    // 가격
     private String gender;  // 상품 성별
 
+    private String titleImage;    // 상품 대표 이미지
+    private String contentImage;    // 상품 본문 이미지
+    private String content;     // 상품 본문 내용
+
     private Long discountStartDate;  // 세일 시작 기간
     private Long discountEndDate;    // 세일 종료 기간
     private Long createdAt;          // 상품 등록 시간

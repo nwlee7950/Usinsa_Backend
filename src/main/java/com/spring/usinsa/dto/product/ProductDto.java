@@ -2,6 +2,7 @@ package com.spring.usinsa.dto.product;
 
 import com.spring.usinsa.model.product.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,11 +18,12 @@ public class ProductDto {
         private String gender;
 
         private DeliveryInfoDto deliveryInfo;
-        private long subCategoryId;
-        private long brandId;
+        private Long subCategoryId;
+        private Long brandId;
 
         private List<ProductSize> productSizeList;
-        private ProductImageDto.Request productImageList;
+        private MultipartFile titleImage;   // 대표 이미지
+//        private ProductImageDto.Request productImageList;
         private List<ProductDiscountDetail> productDiscountDetailList;
 
         public Product toProductEntity(){
