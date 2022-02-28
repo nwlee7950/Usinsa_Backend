@@ -40,7 +40,8 @@ public class JwtTokenProvider {
 
     // Jwt 토큰 DTO 생성
     public TokenDto createTokenDto(long userPk, List<String> roles) {
-        // Claims 에 user 구분을 위한 User pk(username) 및 authorities 목록 삽입
+        System.out.println("secretKey = " + secretKey);
+        // Claims 에 user 구분을 위한 User pk(userId) 및 authorities 목록 삽입
         Claims claims = Jwts.claims().setSubject(Long.toString(userPk));
         claims.put(ROLES, roles);
 
