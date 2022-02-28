@@ -1,8 +1,7 @@
 package com.spring.usinsa.controller.api.v1;
 
-import com.spring.usinsa.config.jwt.JwtTokenProvider;
-import com.spring.usinsa.config.jwt.TokenDto;
-import com.spring.usinsa.config.jwt.TokenRequestDto;
+import com.spring.usinsa.util.JwtTokenProvider;
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.serviceImpl.ApiResponseService;
 import com.spring.usinsa.response.SingleResponse;
 import com.spring.usinsa.service.TokenService;
@@ -34,7 +33,7 @@ public class TokenRestController {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
         // TokenRequestDto 생성
-        TokenRequestDto tokenRequestDto = tokenService.setTokenRequestDto(accessToken, refreshToken);
+        TokenDto.Request tokenRequestDto = tokenService.setTokenRequestDto(accessToken, refreshToken);
 
         // Refresh 토큰 검증 및 Access Token 재발급
         TokenDto tokenDto = tokenService.refresh(tokenRequestDto);

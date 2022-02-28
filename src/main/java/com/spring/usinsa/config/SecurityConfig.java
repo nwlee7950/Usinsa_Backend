@@ -1,7 +1,8 @@
 package com.spring.usinsa.config;
 
-import com.spring.usinsa.config.jwt.JwtAuthenticationFilter;
-import com.spring.usinsa.config.jwt.JwtTokenProvider;
+import com.spring.usinsa.filter.AdminFilter;
+import com.spring.usinsa.filter.JwtAuthenticationFilter;
+import com.spring.usinsa.util.JwtTokenProvider;
 import com.spring.usinsa.serviceImpl.AdminUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

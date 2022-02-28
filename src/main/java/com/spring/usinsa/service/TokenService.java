@@ -1,8 +1,8 @@
 package com.spring.usinsa.service;
 
 
-import com.spring.usinsa.config.jwt.TokenDto;
-import com.spring.usinsa.config.jwt.TokenRequestDto;
+import com.spring.usinsa.dto.TokenDto;
+import com.spring.usinsa.dto.TokenRequestDto;
 import com.spring.usinsa.dto.UserLoginRequestDto;
 import com.spring.usinsa.model.User;
 

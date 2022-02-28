@@ -1,5 +1,6 @@
-package com.spring.usinsa.config.jwt;
+package com.spring.usinsa.util;
 
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.User;
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,9 +40,7 @@ public class JwtTokenProvider {
     }
 
     // Jwt 토큰 DTO 생성
-    public TokenDto createTokenDto(long userPk, String roles) {
-        System.out.println("secretKey = " + secretKey);
-        // Claims 에 user 구분을 위한 User pk(userId) 및 authorities 목록 삽입
+    public TokenDto createTokenDto(long userPk, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(Long.toString(userPk));
         claims.put(ROLES, roles);
 

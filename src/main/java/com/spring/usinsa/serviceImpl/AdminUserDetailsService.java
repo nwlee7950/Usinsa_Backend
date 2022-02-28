@@ -29,7 +29,9 @@ public class AdminUserDetailsService implements UserDetailsService {
         User user = userService.findFirstByUsernameAndSocial(username, Social.USINSA);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getValue()));
+        for(String role : user.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
 
         return user;
     }

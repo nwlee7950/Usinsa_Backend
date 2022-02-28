@@ -2,7 +2,6 @@ package com.spring.usinsa.repository;
 
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
-import com.spring.usinsa.model.Role;
 import com.spring.usinsa.model.Social;
 import com.spring.usinsa.model.User;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,7 +43,7 @@ public class UserRepositoryTest {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .name(name)
-                .role(Role.ROLE_USER)
+                .roles(Arrays.asList(User.Role.USER.getValue()))
                 .nickname(nickname)
                 .email(email)
                 .phone(phone)
@@ -64,7 +65,7 @@ public class UserRepositoryTest {
                 .username(username)
                 .password(password)
                 .name(name)
-                .role(Role.ROLE_USER)
+                .roles(Arrays.asList(User.Role.USER.getValue()))
                 .nickname(nickname)
                 .email(email)
                 .phone(phone)

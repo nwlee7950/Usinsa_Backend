@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.google.gson.Gson;
-import com.spring.usinsa.config.jwt.TokenDto;
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.dto.oauth2.GoogleProfile;
 import com.spring.usinsa.dto.oauth2.KakaoProfile;
 import com.spring.usinsa.dto.oauth2.KakaoTokenDto;

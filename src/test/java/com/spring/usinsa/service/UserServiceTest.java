@@ -1,6 +1,5 @@
 package com.spring.usinsa.service;
 
-import com.spring.usinsa.model.Role;
 import com.spring.usinsa.model.Social;
 import com.spring.usinsa.model.User;
 import com.spring.usinsa.repository.UserRepository;
@@ -13,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +32,7 @@ Mockito를 활용함으로써 가짜 객체에 원하는 결과를 Stub하여 �
  */
 //@RunWith(MockitoJUnitRunner.class)    // JUnit4 일때 사용
 @ExtendWith(MockitoExtension.class)     // JUnit5 일때 사용
-class UserServiceTest {
+public class UserServiceTest {
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -95,7 +96,7 @@ class UserServiceTest {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .name(name)
-                .role(Role.ROLE_USER)
+                .roles(Arrays.asList(User.Role.USER.getValue()))
                 .nickname(nickname)
                 .email(email)
                 .phone(phone)
@@ -109,7 +110,7 @@ class UserServiceTest {
                 .username(username + "2")
                 .password(passwordEncoder.encode(password))
                 .name(name + "2")
-                .role(Role.ROLE_USER)
+                .roles(Arrays.asList(User.Role.USER.getValue()))
                 .nickname(nickname)
                 .email(email + "2")
                 .phone(phone)

@@ -1,7 +1,7 @@
 package com.spring.usinsa.controller.api.v1;
 
-import com.spring.usinsa.config.jwt.JwtTokenProvider;
-import com.spring.usinsa.config.jwt.TokenDto;
+import com.spring.usinsa.util.JwtTokenProvider;
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.dto.UserLoginRequestDto;
 import com.spring.usinsa.dto.UserSignUpRequestDto;
 import com.spring.usinsa.model.User;
@@ -55,7 +55,7 @@ public class SignRestController {
 
         // JWT 토큰 발급
 //        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRole().getValue());
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), "ADMIN");
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(savedUser.getId(), savedUser.getRoles());
 
         return apiResponseService.getSingleResult(tokenDto);
     }

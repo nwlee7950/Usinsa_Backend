@@ -1,10 +1,11 @@
 package com.spring.usinsa.dto;
 
-import com.spring.usinsa.model.Role;
 import com.spring.usinsa.model.Social;
 import com.spring.usinsa.model.User;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Arrays;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class UserSignUpRequestDto {
                 .phone(this.phone)
                 .social(Social.USINSA)
                 .disable(false)
-                .role(Role.ROLE_USER)
+                .roles(Arrays.asList(User.Role.USER.getValue()))
                 .password(passwordEncoder.encode(this.password))
                 .nickname(this.nickname)
                 .build();
