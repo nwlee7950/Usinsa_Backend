@@ -1,8 +1,8 @@
 package com.spring.usinsa.serviceImpl;
 
-import com.spring.usinsa.config.jwt.JwtTokenProvider;
-import com.spring.usinsa.config.jwt.TokenDto;
-import com.spring.usinsa.config.jwt.TokenRequestDto;
+import com.spring.usinsa.util.JwtTokenProvider;
+import com.spring.usinsa.dto.TokenDto;
+import com.spring.usinsa.dto.TokenRequestDto;
 import com.spring.usinsa.dto.UserLoginRequestDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;

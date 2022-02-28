@@ -1,4 +1,4 @@
-package com.spring.usinsa.config;
+package com.spring.usinsa.filter;
 
 import com.spring.usinsa.model.User;
 import lombok.RequiredArgsConstructor;

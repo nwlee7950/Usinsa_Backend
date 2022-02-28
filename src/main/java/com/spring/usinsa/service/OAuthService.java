@@ -1,7 +1,7 @@
 package com.spring.usinsa.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.spring.usinsa.config.jwt.TokenDto;
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.dto.oauth2.GoogleProfile;
 import com.spring.usinsa.dto.oauth2.KakaoProfile;
 import com.spring.usinsa.dto.oauth2.KakaoTokenDto;

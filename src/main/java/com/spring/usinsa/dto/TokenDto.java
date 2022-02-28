@@ -1,4 +1,4 @@
-package com.spring.usinsa.config.jwt;
+package com.spring.usinsa.dto;
 
 import lombok.*;
 

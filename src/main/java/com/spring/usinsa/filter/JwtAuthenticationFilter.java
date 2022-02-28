@@ -1,5 +1,6 @@
-package com.spring.usinsa.config.jwt;
+package com.spring.usinsa.filter;
 
+import com.spring.usinsa.util.JwtTokenProvider;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import lombok.RequiredArgsConstructor;

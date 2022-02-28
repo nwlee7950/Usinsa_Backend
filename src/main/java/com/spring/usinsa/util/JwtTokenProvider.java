@@ -1,5 +1,6 @@
-package com.spring.usinsa.config.jwt;
+package com.spring.usinsa.util;
 
+import com.spring.usinsa.dto.TokenDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.User;

@@ -1,7 +1,7 @@
 package com.spring.usinsa.controller.api.v1;
 
 import com.google.gson.Gson;
-import com.spring.usinsa.config.jwt.JwtTokenProvider;
+import com.spring.usinsa.util.JwtTokenProvider;
 import com.spring.usinsa.dto.UserLoginRequestDto;
 import com.spring.usinsa.dto.UserSignUpRequestDto;
 import com.spring.usinsa.repository.RefreshTokenRepository;
