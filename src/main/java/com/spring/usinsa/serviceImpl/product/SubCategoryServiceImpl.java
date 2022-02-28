@@ -16,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubCategoryServiceImpl implements SubCategoryService {
 
-    SubCategoryRepository subCategoryRepository;
-    CategoryService categoryService;
+    final SubCategoryRepository subCategoryRepository;
+    final CategoryService categoryService;
 
     @Override
     public SubCategory save(SubCategoryDto.Request subCategoryDto) {

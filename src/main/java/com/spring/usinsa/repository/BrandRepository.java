@@ -18,7 +18,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     Optional<Brand> findById(long id);
 
-    @Query(value = "select new com.spring.usinsa.dto.product.BrandDto.Response(b.id, b.title, b.en_title, count(*)) " +
+    @Query(value = "select new usinsa.dto.product.BrandDto.Response(b.id, b.title, b.en_title, count(*)) " +
             " from Brand b join Product p on b.id = p.brand_id " +
             " where b.title like '%:title%' or b.en_title like '%:title%' group by p.brand_id", nativeQuery = true)
     List<BrandDto.Response> getBrandDtoByTitle(@Param("title") String title);

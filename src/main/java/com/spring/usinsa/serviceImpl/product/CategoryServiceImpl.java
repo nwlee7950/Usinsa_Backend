@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    CategoryRepository categoryRepository;
+    final CategoryRepository categoryRepository;
 
     @Override
     public Category save(String title) {

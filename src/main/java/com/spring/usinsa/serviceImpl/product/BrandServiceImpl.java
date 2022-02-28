@@ -16,7 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
 
-    BrandRepository brandRepository;
+
+    final BrandRepository brandRepository;
 
     @Override
     public Brand save(Brand brand) {
