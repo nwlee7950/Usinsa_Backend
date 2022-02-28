@@ -73,7 +73,7 @@ public class TokenServiceImpl implements TokenService {
         refreshTokenRepository.delete(refreshToken);
 
         // 새로운 AccessToken, RefreshToken 토큰 재발급
-        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getId(), user.getRole().getValue());
+        TokenDto newCreatedToken = jwtTokenProvider.createTokenDto(user.getId(), user.getRoles());
 
         // RefreshToken 저장
         RefreshToken newRefreshToken = RefreshToken.builder()
@@ -90,7 +90,7 @@ public class TokenServiceImpl implements TokenService {
     public TokenDto saveToken(User user) {
 
         // AccessToken, RefreshToken 발급
-        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getId(), user.getRole().getValue());
+        TokenDto tokenDto = jwtTokenProvider.createTokenDto(user.getId(), user.getRoles());
 
         // RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()

@@ -1,12 +1,17 @@
 package com.spring.usinsa.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Entity
@@ -16,6 +21,17 @@ import java.util.Collection;
 @AllArgsConstructor
 @Table(name = "user")
 public class User extends BaseTimeEntity implements UserDetails {
+
+    // 회원 권한 (ex - user, admin, super_admin)
+    @AllArgsConstructor
+    @Getter
+    public enum Role{
+        SUPER_ADMIN("ROLE_SUPER_ADMIN"),
+        ADMIN("ROLE_ADMIN"),
+        USER("ROLE_USER");
+
+        String value;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +47,6 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-
-    @Enumerated(EnumType.STRING)
-    private Role role; // 회원 권한 (ex - user, admin, super_admin)
-
     @Enumerated(EnumType.STRING)
     private Social social; // 소셜명 (ex - usinsa, kakao, naver, google)
     private String socialId; // 소셜의 PK
@@ -46,9 +58,26 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.password = password;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name="user_role",
+            joinColumns=@JoinColumn(name="user_id")
+    )
+    @Column(name = "role")
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
