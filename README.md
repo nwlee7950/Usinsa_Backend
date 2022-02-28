@@ -9,7 +9,8 @@
 * Spring Boot 2.6.3
 * REST API
 * MySQL + MongoDB
-* Spring Security + Redis(예정) + JWT + OAuth2(네이버, 카카오, 구글)
+* API - Spring Security + Redis + JWT + OAuth2(네이버, 카카오, 구글)
+* ADMIN - Spring Security + Session
 * Spring Data JPA
 * Swagger 3.0.0
 * Thymeleaf
