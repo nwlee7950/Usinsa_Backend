@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
-    ReviewRepository reviewRepository;
+    final ReviewRepository reviewRepository;
 
     @Override
     public Review save(ReviewDto.Request reviewDto, long userId) {

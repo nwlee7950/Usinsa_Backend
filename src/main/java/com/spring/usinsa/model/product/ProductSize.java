@@ -13,7 +13,10 @@ public class ProductSize {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private long productDetailId;
     private int total;
 
     private int size;

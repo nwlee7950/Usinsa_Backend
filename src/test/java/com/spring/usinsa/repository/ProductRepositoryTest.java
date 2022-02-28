@@ -6,6 +6,7 @@ import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.product.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,13 +22,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)    // (replace = Replace.NONE)를 통해서 TestDatabaseAutoConfiguration 에서 DataSource 가 bean 으로 등록되지 않게 하면 DataSourceAutoConfiguration 에 의해서 DataSource 가 등록되게 된다.
 public class ProductRepositoryTest {
 
-    @Autowired
+    @Mock
     private ProductRepository productRepository;
-    @Autowired
+
+    @Mock
     private BrandRepository brandRepository;
-    @Autowired
+
+    @Mock
     private DeliveryInfoRepository deliveryInfoRepository;
-    @Autowired
+
+    @Mock
     private SubCategoryRepository subCategoryRepository;
 
     private static final String gender = "male";

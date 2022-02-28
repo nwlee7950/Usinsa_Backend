@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,9 +29,10 @@ public class BrandRepositoryTest {
     private static String enTitle = "adidas";
     private static String info = " 삼성보다 삼선 ";
     private static String image = "image1.png";
-    private long savedId = 0;
+    private long savedId = 2;
 
     @Test
+    @Transactional
     public void save(){
         Brand brand = Brand.builder()
                 .title(title)

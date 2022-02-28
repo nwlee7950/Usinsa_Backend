@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductLikeServiceImpl implements ProductLikeService {
 
-    @Autowired
-    ProductLikeRepository productLikeRepository;
+
+    final ProductLikeRepository productLikeRepository;
 
     @Override
     public ProductLike createProductLike(long userId, long productId) {

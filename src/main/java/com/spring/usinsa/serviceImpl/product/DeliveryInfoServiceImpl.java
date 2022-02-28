@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DeliveryInfoServiceImpl implements DeliveryInfoService {
 
-    DeliveryInfoRepository deliveryInfoRepository;
+    final DeliveryInfoRepository deliveryInfoRepository;
 
     @Override
     public DeliveryInfo save(DeliveryInfoDto.Request deliveryInfoDto) {

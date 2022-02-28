@@ -8,6 +8,7 @@ import com.spring.usinsa.repository.ProductRepository;
 import com.spring.usinsa.service.BrandService;
 import com.spring.usinsa.service.ProductService;
 import com.spring.usinsa.service.SubCategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
-    BrandService brandService;
-    SubCategoryService subCategoryService;
+    final ProductRepository productRepository;
+    final BrandService brandService;
+    final SubCategoryService subCategoryService;
 
     @Override
     public Product save(ProductDto.Request productDto) {
@@ -32,16 +33,6 @@ public class ProductServiceImpl implements ProductService {
         product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
 
         productRepository.save(product);
-
-        //TODO
-        // product 저장 후 productId와 dto에서 정보를 꺼내 image, size, discount 등을 저장
-        // 각각의 service 작성 후 이어할 계획
-//        ProductImage productImage
-//        productImageService.save(productImage);
-//        ProductSize productsize
-//        productSizeService.save(productImage);
-//        ProductDiscount productDiscount
-//        productDiscountService.save(productDiscount);
 
         return product;
     }
@@ -107,14 +98,12 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(ProductDto.UpdateRequest productDto) {
         Product product = findById(productDto.getId());
 
-        product.setDeliveryInfo(productDto.getDeliveryInfo());
         product.setPrice(productDto.getPrice());
         product.setDiscountStartDate(productDto.getDiscountStartDate());
         product.setDiscountEndDate(productDto.getDiscountEndDate());
 
         //TODO
-        // size, discount, delivery, Image 수정은
-        // 각각 서비스 준비되면 다시 작성 예정
+        // size, Image 수정
 
         return product;
     }

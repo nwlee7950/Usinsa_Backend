@@ -18,6 +18,8 @@ public class Product {
     private String title; // 상품명
     private int price;    // 가격
     private String gender;  // 상품 성별
+    private String image;   // 상품 대표 이미지
+    private int discountRate; // 할인율
 
     private Long discountStartDate;  // 세일 시작 기간
     private Long discountEndDate;    // 세일 종료 기간
@@ -30,17 +32,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id", insertable = false, updatable = false)
     private Brand brand;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deliveryInfo_id", insertable = false, updatable = false)
-    private DeliveryInfo deliveryInfo;
-
-    @OneToMany(fetch = FetchType.LAZY , mappedBy = "productId")
-    private List<ProductDiscountDetail> productDisCountDetail;
-
-    @OneToMany(fetch = FetchType.LAZY , mappedBy = "productId")
-    private List<ProductImage> productImages;
-
-    @OneToMany(fetch = FetchType.LAZY , mappedBy = "productId")
-    private List<ProductSize> productSize;
 }
