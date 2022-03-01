@@ -19,6 +19,6 @@ public interface ProductService {
 
     Page<ProductDto> findByProductRequest(ProductDto.FindProductRequest findProductRequest);
 
-    Product updateProduct(Long productId, ProductDto.UpdateRequest productDto);
+    Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) throws Exception;
     void deleteById(long productId);
 }
