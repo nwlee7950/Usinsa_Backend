@@ -16,20 +16,20 @@ public class ProductDto {
         private long discountEndDate;
         private String title;
         private String gender;
+        private int discountRate; // 할인율
 
-        private DeliveryInfoDto deliveryInfo;
         private Long subCategoryId;
         private Long brandId;
+        private MultipartFile titleImage;   // 대표 이미지
 
         private List<ProductSize> productSizeList;
-        private MultipartFile titleImage;   // 대표 이미지
-//        private ProductImageDto.Request productImageList;
-        private List<ProductDiscountDetail> productDiscountDetailList;
+        private ProductImageDto.Request productImageList;
 
         public Product toProductEntity(){
             return Product.builder()
                     .discountStartDate(this.discountStartDate)
                     .discountEndDate(this.discountEndDate)
+                    .discountRate(this.discountRate)
                     .gender(this.gender)
                     .price(this.price)
                     .title(this.title)
@@ -45,14 +45,10 @@ public class ProductDto {
         private long discountEndDate;
         private String title;
         private String gender;
+        private int discountRate;
+        private MultipartFile titleImage;
 
-        private DeliveryInfo deliveryInfo;
-        private SubCategory subCategory;
-        private Brand brand;
-
-        private List<ProductSize> productSizeList;
-        private List<ProductImageDto.Request> productImageList;
-        private List<ProductDiscountDetail> productDiscountDetailList;
+        private long subCategoryId;
     }
 
     @Getter
@@ -78,14 +74,11 @@ public class ProductDto {
         private long discountEndDate;
         private String title;
         private String gender;
+        private int discountRate;
+        private String titleImage;
 
-        private DeliveryInfo deliveryInfo;
         private SubCategory subCategory;
         private Brand brand;
-
-        private List<ProductSize> productSizeList;
-        private List<ProductImageDto.Response> productImageList;
-        private List<ProductDiscountDetail> productDiscountDetailList;
     }
 
 
