@@ -8,6 +8,7 @@ import com.spring.usinsa.repository.BrandRepository;
 import com.spring.usinsa.service.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.spring.usinsa.serviceImpl.MinioService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -17,10 +18,17 @@ import java.util.List;
 public class BrandServiceImpl implements BrandService {
 
 
-    final BrandRepository brandRepository;
+    private final BrandRepository brandRepository;
+    private final MinioService minioService;
 
+    private final String BRAND_FOLDER ="brand/";
     @Override
-    public Brand save(Brand brand) {
+    public Brand save(BrandDto.Request brandDto) throws Exception {
+
+        Brand brand = brandDto.toBrandEntity();
+        String image = minioService.upsertFile(null, BRAND_FOLDER, brandDto.getImage());
+        brand.setImage(image);
+
         return brandRepository.save(brand);
     }
 
@@ -40,16 +48,17 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     @Transactional
-    public Brand updateBrand(BrandDto.UpdateRequest brandDto) {
+    public Brand updateBrand(BrandDto.UpdateRequest brandDto) throws Exception{
         Brand brand = brandRepository.findById(brandDto.getId())
                 .orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND));
 
+        String image = minioService.upsertFile(null, BRAND_FOLDER, brandDto.getImage());
+        minioService.removeFile(brand.getImage());
+
+        brand.setImage(image);
         brand.setTitle(brandDto.getTitle());
         brand.setEnTitle(brandDto.getEnTitle());
         brand.setInfo(brandDto.getInfo());
-
-        //TODO
-        //기존 이미지 삭제 및 업로드
 
         return brand;
     }

@@ -15,12 +15,12 @@ public class ProductDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String image;
+    private String contentImage;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @OneToMany(fetch = FetchType.LAZY , mappedBy = "productDetailId")

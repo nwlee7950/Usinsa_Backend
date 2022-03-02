@@ -6,10 +6,10 @@ import com.spring.usinsa.model.product.Brand;
 import java.util.List;
 
 public interface BrandService {
-    Brand save(Brand brand);
+    Brand save(BrandDto.Request brandDto) throws Exception;
     Brand findById(long id);
     List<BrandDto.Response> findAllByTitleContains(String title);
-    Brand updateBrand(BrandDto.UpdateRequest brandDto);
+    Brand updateBrand(BrandDto.UpdateRequest brandDto) throws Exception;
     List<BrandDto.ResponseBySubCategory> getBrandListBySubCategory(long subCategory);
 
 }

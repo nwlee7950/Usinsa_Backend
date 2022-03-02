@@ -8,14 +8,13 @@ import com.spring.usinsa.repository.ProductRepository;
 import com.spring.usinsa.service.BrandService;
 import com.spring.usinsa.service.ProductService;
 import com.spring.usinsa.service.SubCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.spring.usinsa.serviceImpl.MinioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.spring.usinsa.serviceImpl.MinioService;
 
 @Slf4j
 @Service
@@ -46,8 +45,11 @@ public class ProductServiceImpl implements ProductService {
 //        product.setTitleImage(titleImage);
 //
 //        return productRepository.save(product);
-
         Product product = productDto.toProductEntity();
+
+        String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
+        product.setImage(titleImage);
+
         product.setBrand(brandService.findById(productDto.getBrandId()));
         product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
 
@@ -114,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) {
+    public Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) throws Exception {
 
         // Product Title Image 수정 과정 이런 식임. SubCategory 도 추가 필요 및
         // ProductDto.Request 에서 toProductEntity(Brand, SubCategory) 같이 변경하고 builder 도 수정 필요
@@ -139,9 +141,17 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = findById(productDto.getId());
 
+        String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
+        minioService.removeFile(PRODUCT_FOLDER+product.getImage());
+
+        product.setImage(titleImage);
+
         product.setPrice(productDto.getPrice());
         product.setDiscountStartDate(productDto.getDiscountStartDate());
         product.setDiscountEndDate(productDto.getDiscountEndDate());
+        product.setDiscountRate(productDto.getDiscountRate());
+        product.setGender(productDto.getGender());
+        product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
 
         //TODO
         // size, Image 수정

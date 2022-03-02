@@ -29,16 +29,12 @@ public class ProductRepositoryTest {
     private BrandRepository brandRepository;
 
     @Mock
-    private DeliveryInfoRepository deliveryInfoRepository;
-
-    @Mock
     private SubCategoryRepository subCategoryRepository;
 
     private static final String gender = "male";
     private static final int price = 19800;
     private static final String title = "021541 레이어드 반팔 티셔츠(2pck)";
     private static final long brandId = 1;
-    private static final long deleveryInfoId = 1;
     private static final long subCategoryId = 1;
 
 
@@ -51,7 +47,6 @@ public class ProductRepositoryTest {
                 .price(price)
                 .title(title)
                 .brand(brandRepository.findById(brandId).orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND)))
-                .deliveryInfo(deliveryInfoRepository.findById(deleveryInfoId).orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND)))
                 .subCategory(subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND))).build();
 
         //when

@@ -1,16 +1,25 @@
 package com.spring.usinsa.dto.product;
 
+import com.spring.usinsa.model.product.Brand;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public class BrandDto {
 
     @Getter
-    public static class CreateRequest {
+    public static class Request {
         private String title;
         private String enTitle;
         private String info;
         private MultipartFile image;
+
+        public Brand toBrandEntity(){
+            return Brand.builder()
+                    .title(this.title)
+                    .enTitle(this.enTitle)
+                    .info(this.info)
+                    .build();
+        }
     }
 
     @Getter
@@ -19,7 +28,7 @@ public class BrandDto {
         private String title;
         private String enTitle;
         private String info;
-        private MultipartFile images;
+        private MultipartFile image;
 
     }
 

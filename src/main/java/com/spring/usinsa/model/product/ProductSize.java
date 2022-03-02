@@ -15,8 +15,8 @@ public class ProductSize {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private long productDetailId;
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetailId;
     private int total;
 
     private int size;
