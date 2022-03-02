@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header"></th:block>
+    <!-- Editor's Style -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card-content">
+                            <form class="form-horizontal" th:action="@{'/admin/blog/content/' + ${blogContent.id}}"
+                                  th:object="${blogContent}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}" th:value="*{id}"/>
+                                <input type="hidden" th:field="*{content}" th:value="*{content}" id="blogContentDetail"/>
+                                <div class="form-group">
+                                    <label for="blogCategoryId" class="col-sm-2 control-label">블로그 카테고리</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="blogCategoryId" name="blogCategoryId">
+                                            <option th:each="blogCategory: ${blogCategoryList}"
+                                                    th:value="${blogCategory.id}"
+                                                    th:text="${blogCategory.title}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">대표 이미지</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" th:field="*{titleImage}" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">제목</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력해 주세요." />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">작성자</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:field="*{writer}" class="form-control" placeholder="작성자를 입력해 주세요." />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">등록일</label>
+                                    <div class="col-sm-10">
+                                        <p type="text" th:field="
+                                ${#dates.format(blogContent.createdAt, 'yyyy-MM-dd HH:mm:ss')}" class="form-control" placeholder="작성자를 입력해 주세요." />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">예상 읽기 소요 시간</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:field="*{estimatedReadTime}" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="content" class="col-sm-2 control-label">컨텐츠 상세내용</label>
+                                    <div class="col-sm-10">
+                                        <div id="editor" name="content"></div>
+                                    </div>
+                                </div>
+
+                                <div class="btn_wrap text-center">
+                                    <a th:href="@{'/admin/blog/content/' + *{id}}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">저장하기</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+
+<!-- Toast UI -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+
+    const blogContentDetail = $("#blogContentDetail").val();
+
+    const Editor = toastui.Editor;
+
+    const editor = new Editor({
+        el: document.querySelector('#editor'),
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        usageStatistics: false,
+        initialValue: blogContentDetail
+    });
+
+    editor.getMarkdown();
+
+
+</script>
+</body>
+</html>

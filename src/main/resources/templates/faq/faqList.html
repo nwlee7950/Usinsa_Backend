@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<th:block layout:fragment="header" th:include="fragments/header.html"></th:block>
+
+<link th:href="@{vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet">
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h5 class="m-0 font-weight-bold">FAQ 목록</h5>
+                            </div>
+                            <br>
+                            <div class="card-body">
+                                <!-- FAQ 카테고리 검색 조건 -->
+                                <form class="form-inline" th:method="get" th:action>
+                                    <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="faqCategoryId" name="faqCategoryId">
+                                        <option value="">전체</option>
+                                        <option th:each="faqCategory: ${faqCategoryList}"
+                                                th:value="${faqCategory.id}"
+                                                th:text="${faqCategory.title}">
+                                        </option>
+                                    </select>
+                                    <button class="btn btn-primary ml-2" type="submit">검색</button>
+                                </form>
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>카테고리</th>
+                                            <th>질문</th>
+                                            <th>등록일</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="faq: ${pages}">
+                                            <td th:text="${faq.id}"></td>
+                                            <td th:text="${faq.faqCategory.title}"></td>
+                                            <td>
+                                                <a th:href="@{'/admin/guide/faq/' + ${faq.id}}">
+                                                    <span th:text="${faq.question}"></span>
+                                                </a>
+                                            </td>
+                                            <td th:text="${#dates.format(faq.createdAt, 'yyyy-MM-dd HH:mm:ss')}">date</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="btn_wrap text-left">
+                                    <a th:href="@{/admin/guide/faq/add}" class="btn btn-primary waves-effect waves-light">FAQ 등록</a>
+                                </div>
+                                <br>
+                                <!-- Pagination -->
+                                <div id="paging-section">
+                                    <nav aria-label="Page navigation example"
+                                         th:with="start=${(pages.number/maxPage)*maxPage + 1},
+                          end=(${(pages.totalPages == 0) ? 1 : (start + (maxPage - 1) < pages.totalPages ? start + (maxPage - 1) : pages.totalPages)})">
+                                        <ul class="pagination justify-content-center">
+                                            <li th:class="${start <= 1} ? 'page-item disabled'" class="page-item">
+                                                <a class="page-link" th:href="@{/admin/guide/faq(page=0, faqCategoryId=${faqCategoryId})}" tabindex="-1"><<</a>
+                                            </li>
+                                            <li th:class="${start <= 1} ? 'page-item disabled'" class="page-item">
+                                                <a class="page-link" th:href="@{/admin/guide/faq(page=${start - maxPage - 1}, faqCategoryId=${faqCategoryId})}" tabindex="-1">Previous</a>
+                                            </li>
+                                            <li th:class="${currentPage == (page - 1)} ? 'page-item active'" class="page-item" th:each="page: ${#numbers.sequence(start, end)}">
+                                                <a class="page-link" th:href="@{/admin/guide/faq(page=${page}-1, faqCategoryId=${faqCategoryId})}" th:text="${page}"></a>
+                                            </li>
+                                            <li th:class="${end >= pages.totalPages} ? 'page-item disabled'" class="page-item">
+                                                <a class="page-link" th:href="@{/admin/guide/faq(page=${start + maxPage - 1}, faqCategoryId=${faqCategoryId})}">Next</a>
+                                            </li>
+                                            <li th:class="${end >= pages.totalPages} ? 'page-item disabled'" class="page-item">
+                                                <a class="page-link" th:href="@{/admin/guide/faq(page=${pages.totalPages - 1}, faqCategoryId=${faqCategoryId})}">>></a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+
+</body>
+</html>

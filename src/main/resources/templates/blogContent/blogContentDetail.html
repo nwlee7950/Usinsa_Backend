@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header.html"></th:block>
+    <!-- Editor's Style -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css" />
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card">
+                            <form class="form-horizontal form-view" th:object="${blogContent}">
+
+                                <div class="card-body">
+                                    <input type="hidden" th:value="*{content}" id="blogContentDetail">
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">제목</label>
+                                        <div class="col-sm-10">
+                                            <p th:text="*{title}" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">대표 이미지</label>
+                                        <div class="col-sm-10">
+                                            <img th:src="@{*{titleImage}}" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">작성자</label>
+                                        <div class="col-sm-10">
+                                            <p th:text="*{writer}" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">예상 읽기 소요 시간</label>
+                                        <div class="col-sm-10">
+                                            <p th:text="*{estimatedReadTime}" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">등록일</label>
+                                        <div class="col-sm-10">
+                                            <p th:text="${#dates.format(blogContent.createdAt, 'yyyy-MM-dd HH:mm:ss')}" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">수정일</label>
+                                        <div class="col-sm-10">
+                                            <p th:text="${#dates.format(blogContent.updatedAt, 'yyyy-MM-dd HH:mm:ss')}" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="form-group">
+                                        <label class="col-sm control-label">컨텐츠 상세내용</label>
+                                        <div class="col-sm">
+                                            <div id="viewer"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="btn_wrap text-center">
+                                        <a th:href="@{/admin/blog/content}" class="btn btn-secondary waves-effect waves-light">뒤로가기</a>
+                                        <a th:href="@{'/admin/blog/content/edit/' + ${blogContent.id}}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="|deleteBlogContent(${blogContent.id})|">삭제하기</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+<!-- Toast UI -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
+
+</body>
+
+<script>
+    function deleteBlogContent(id) {
+        if(confirm("삭제하시겠습니까?")) {
+            fetch('http://localhost:8080/admin/blog/content/' + id, {
+                method: 'DELETE',
+            })
+                .then(res => res.json()) // or res.json()
+                .then(json => {
+                    console.log(json);
+                    window.location.href="http://localhost:8080/admin/blog/content"
+                });
+        }
+    }
+
+    const contentDetail = $("#blogContentDetail").val();
+
+    const Viewer = toastui.Editor;
+
+    const viewer = new Viewer({
+        el: document.querySelector('#viewer'),
+        height: '600px',
+        initialValue: contentDetail
+    });
+</script>
+
+</html>
