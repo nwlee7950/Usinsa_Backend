@@ -1,5 +1,7 @@
 package com.spring.usinsa.dto.product;
 
+import com.spring.usinsa.model.product.Product;
+import com.spring.usinsa.model.product.ProductDetail;
 import com.spring.usinsa.model.product.ProductSize;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +13,18 @@ import java.util.List;
 public class ProductDetailDto {
 
     @Getter
-    public static class UpdateRequest{
+    public static class Request{
         private Long productId;
         private List<ProductSize> productSizeList;
         private ProductImageDto.Request productImageList;
         private MultipartFile contentImage;
+
+        public ProductDetail toProductDetailEntity(Product product, String uploadedImage){
+            return ProductDetail.builder()
+                    .product(product)
+                    .contentImage(uploadedImage)
+                    .build();
+        }
     }
 
     @Builder

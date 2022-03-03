@@ -3,7 +3,9 @@ package com.spring.usinsa.serviceImpl.product;
 import com.spring.usinsa.dto.product.ProductDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.product.Brand;
 import com.spring.usinsa.model.product.Product;
+import com.spring.usinsa.model.product.SubCategory;
 import com.spring.usinsa.repository.ProductRepository;
 import com.spring.usinsa.service.BrandService;
 import com.spring.usinsa.service.ProductService;
@@ -30,32 +32,13 @@ public class ProductServiceImpl implements ProductService {
   
     @Override
     public Product save(ProductDto.Request productDto) throws Exception {
+        String uploadedTitleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
+        Brand brand = brandService.findById(productDto.getBrandId());
+        SubCategory subCategory = subCategoryService.findById(productDto.getSubCategoryId());
 
-        // Product Title Image 추가 과정 이런 식임. SubCategory 도 추가 필요 및
-        // ProductDto.Request 에서 toProductEntity(Brand, SubCategory) 같이 변경하고 builder 도 수정 필요
-//        Brand brand = brandService.findById(productDto.getBrandId());
-//
-//        // 새로운 Product 객체 생성 후 Brand 설정
-//        Product product = productDto.toProductEntity(brand);
-//
-//        // 대표 이미지 Upsert
-//        String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
-//
-//        // TitleImage 설정
-//        product.setTitleImage(titleImage);
-//
-//        return productRepository.save(product);
-        Product product = productDto.toProductEntity();
+        Product product = productDto.toProductEntity(uploadedTitleImage, brand, subCategory);
 
-        String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
-        product.setImage(titleImage);
-
-        product.setBrand(brandService.findById(productDto.getBrandId()));
-        product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
-
-        productRepository.save(product);
-
-        return product;
+        return productRepository.save(product);
     }
 
     @Override
@@ -63,7 +46,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.PRODUCT_NOT_FOUND));
 
-//        return toProductDto(product);
         return product;
     }
 
@@ -117,28 +99,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) throws Exception {
-
-        // Product Title Image 수정 과정 이런 식임. SubCategory 도 추가 필요 및
-        // ProductDto.Request 에서 toProductEntity(Brand, SubCategory) 같이 변경하고 builder 도 수정 필요
-//
-//
-//        Product product = productService.findById(productDto.getId());
-//
-//        if(!(productRepository.existsById(productDto.getId())
-//                && productId.equals(productDto.getId()))) {
-//            throw new ApiException(ApiErrorCode.INVALID_PARAMS);
-//        }
-
-//        // 대표 이미지 설정
-//        String titleImage = minioService.upsertFile(product.getTitleImage(), PRODUCT_FOLDER, productDto.getTitleImage());
-//        product.setTitleImage(titleImage);
-//
-//        // 브랜드 설정
-//        Brand brand = brandService.findById(productDto.getBrandId());
-//        product.setBrand(brand);
-//
-//        return productRepository.save(product);
-
         Product product = findById(productDto.getId());
 
         String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
@@ -152,9 +112,6 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountRate(productDto.getDiscountRate());
         product.setGender(productDto.getGender());
         product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
-
-        //TODO
-        // size, Image 수정
 
         return product;
     }

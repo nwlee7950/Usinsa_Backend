@@ -13,11 +13,12 @@ public class BrandDto {
         private String info;
         private MultipartFile image;
 
-        public Brand toBrandEntity(){
+        public Brand toBrandEntity(String uploadedImage){
             return Brand.builder()
                     .title(this.title)
                     .enTitle(this.enTitle)
                     .info(this.info)
+                    .image(uploadedImage)
                     .build();
         }
     }

@@ -25,7 +25,7 @@ public class ProductDto {
         private List<ProductSize> productSizeList;
         private ProductImageDto.Request productImageList;
 
-        public Product toProductEntity(){
+        public Product toProductEntity(String uploadedTitleImage, Brand brand, SubCategory subCategory){
             return Product.builder()
                     .discountStartDate(this.discountStartDate)
                     .discountEndDate(this.discountEndDate)
@@ -33,6 +33,9 @@ public class ProductDto {
                     .gender(this.gender)
                     .price(this.price)
                     .title(this.title)
+                    .image(uploadedTitleImage)
+                    .brand(brand)
+                    .subCategory(subCategory)
                     .build();
         }
     }

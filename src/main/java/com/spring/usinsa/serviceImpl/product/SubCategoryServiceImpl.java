@@ -3,6 +3,7 @@ package com.spring.usinsa.serviceImpl.product;
 import com.spring.usinsa.dto.product.SubCategoryDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.product.Category;
 import com.spring.usinsa.model.product.SubCategory;
 import com.spring.usinsa.repository.SubCategoryRepository;
 import com.spring.usinsa.service.CategoryService;
@@ -21,11 +22,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public SubCategory save(SubCategoryDto.Request subCategoryDto) {
+        Category category = categoryService.findById(subCategoryDto.getCategoryId());
 
-        return subCategoryRepository.save(SubCategory.builder()
-                .title(subCategoryDto.getTitle())
-                .category(categoryService.findById(subCategoryDto.getCategoryId()))
-                .build());
+        return subCategoryRepository.save(subCategoryDto.toSubCategoryEntity(category));
     }
 
     @Override

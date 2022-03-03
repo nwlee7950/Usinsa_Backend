@@ -25,9 +25,8 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public Brand save(BrandDto.Request brandDto) throws Exception {
 
-        Brand brand = brandDto.toBrandEntity();
-        String image = minioService.upsertFile(null, BRAND_FOLDER, brandDto.getImage());
-        brand.setImage(image);
+        String uploadedImage = minioService.upsertFile(null, BRAND_FOLDER, brandDto.getImage());
+        Brand brand = brandDto.toBrandEntity(uploadedImage);
 
         return brandRepository.save(brand);
     }

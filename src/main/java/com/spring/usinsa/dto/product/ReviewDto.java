@@ -10,7 +10,6 @@ public class ReviewDto {
     @Getter
     public static class Request{
         private Long id;
-        private Long userId;
         private Long productId;
         private int weight;
         private int height;
@@ -18,13 +17,14 @@ public class ReviewDto {
         private int point;
         private String body;
 
-        public Review toReviewEntity(){
+        public Review toReviewEntity(long userId){
             return Review.builder()
                     .body(body)
                     .gender(gender)
                     .weight(weight)
                     .height(height)
                     .point(point)
+                    .userId(userId)
                     .productId(productId).build();
         }
     }
