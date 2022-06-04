@@ -15,35 +15,35 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductLikeServiceImpl implements ProductLikeService {
 
-
     final ProductLikeRepository productLikeRepository;
 
     @Override
-    public ProductLike createProductLike(long userId, long productId) {
+    public ProductLike save(Long userId, Long productId) {
 
         return productLikeRepository.save(ProductLike.builder()
                 .userId(userId)
-                .productId(productId).build());
+                .productId(productId)
+                .build());
     }
 
     @Override
-    public void deleteProductLikeByUserIdAndProductId(long userId, long productId) {
+    public void deleteProductLikeByUserIdAndProductId(Long userId, Long productId) {
         if(productLikeRepository.deleteByUserIdAndProductId(userId, productId) <= 0)
             throw new ApiException(ApiErrorCode.OAUTH_ERROR);
     }
 
     @Override
-    public Boolean existsProductLikeByUserIdAndProductId(long userId, long productId) {
+    public Boolean existsProductLikeByUserIdAndProductId(Long userId, Long productId) {
         return productLikeRepository.existsByUserIdAndProductId(userId, productId);
     }
 
     @Override
-    public long countProductLikeByProductId(long productId) {
+    public int countByProductId(Long productId) {
         return productLikeRepository.countByProductId(productId);
     }
 
     @Override
-    public Page<ProductLike> countProductLikeByUserId(long userId, Pageable pageable) {
+    public Page<ProductLike> countProductLikeByUserId(Long userId, Pageable pageable) {
         Page<ProductLike> productLikes = productLikeRepository.findByUserId(userId, pageable);
 //        productLikes.map(m -> new ProductLikeDto());
 

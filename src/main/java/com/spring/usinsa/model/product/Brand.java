@@ -16,7 +16,7 @@ public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String title;     // 브랜드 명
     private String enTitle;   // 브랜드 영어 이름
     private String image;     // 대표 이미지

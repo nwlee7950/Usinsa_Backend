@@ -159,7 +159,7 @@ sup {
 }
 
 a {
-  color: #4e73df;
+  color: #202020;
   text-decoration: none;
   background-color: transparent;
 }
@@ -6481,7 +6481,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #5a5c69 !important;
+  background-color: #202020 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -9648,7 +9648,7 @@ a.text-light:hover, a.text-light:focus {
 }
 
 .text-dark {
-  color: #5a5c69 !important;
+  color: #202020 !important;
 }
 
 a.text-dark:hover, a.text-dark:focus {

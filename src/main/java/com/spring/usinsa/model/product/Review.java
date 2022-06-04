@@ -18,11 +18,9 @@ public class Review {
     private Long id;
     private Long userId;
     private Long productId;
-    private int weight;
-    private int height;
-    private String gender;
     private int point;
     private String body;
-//    private evaluation evaluation_size;
-//    private
+
+    private String nickname;
+    private String userImage;
 }

@@ -99,7 +99,6 @@ public class MinioService {
 
         // 확장자 Validation
         validateContentType(contentType);
-
         // DB 에 이미 이미지 값이 있을 때
         if(existImage != null) {
             // MINIO 에도 해당 이미지가 있다면
@@ -113,9 +112,9 @@ public class MinioService {
         String image = folder + UUID.randomUUID().toString();
 
         // MINIO 에 중복된 파일명이 있을 경우, 중복이 발생하지 않을 때까지 재생성
-        while(getObjectStat(image) != null) {
+/*        while(getObjectStat(image) != null) {
             image = folder + UUID.randomUUID().toString();
-        }
+        }*/
 
         // 새로운 프로필 이미지 업로드
         uploadFile(image, contentType, multipartFile.getInputStream());

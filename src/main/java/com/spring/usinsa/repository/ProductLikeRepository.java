@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> {
 
-    public Boolean existsByUserIdAndProductId(long userId, long productId);
-    public Page<ProductLike> findByUserId(long userId, Pageable pageable);
-    public long countByProductId(long productId);
-    public long deleteByUserIdAndProductId(long userId, long productId);
+    public Boolean existsByUserIdAndProductId(Long userId, Long productId);
+    public Page<ProductLike> findByUserId(Long userId, Pageable pageable);
+    int countByProductId(Long productId);
+    Long deleteByUserIdAndProductId(Long userId, Long productId);
 }

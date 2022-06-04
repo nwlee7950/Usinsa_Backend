@@ -1,5 +1,6 @@
 package com.spring.usinsa.serviceImpl.product;
 
+import com.spring.usinsa.dto.product.SubCategoryByBrandIdDto;
 import com.spring.usinsa.dto.product.SubCategoryDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
@@ -12,44 +13,74 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SubCategoryServiceImpl implements SubCategoryService {
 
-    final SubCategoryRepository subCategoryRepository;
-    final CategoryService categoryService;
+    private final SubCategoryRepository subCategoryRepository;
 
     @Override
-    public SubCategory save(SubCategoryDto.Request subCategoryDto) {
-        Category category = categoryService.findById(subCategoryDto.getCategoryId());
-
-        return subCategoryRepository.save(subCategoryDto.toSubCategoryEntity(category));
+    public SubCategory save(Category category, String title) {
+        return subCategoryRepository.save(SubCategory.builder().title(title).category(category).build());
     }
 
     @Override
-    public SubCategory findById(long id) {
+    public SubCategoryDto.Response findById(Long id) {
         SubCategory subCategory = subCategoryRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.CATEGORY_NOT_FOUND));
-        return subCategory;
+
+        return SubCategoryDto.Response.toSubCategoryResponse(subCategory);
     }
 
     @Override
-    public List<SubCategory> findByCategoryId(long categoryId) {
-        return subCategoryRepository.findByCategoryId(categoryId);
+    public List<SubCategoryDto.Response> findAll() {
+        List<SubCategory> subCategoryList = subCategoryRepository.findAll();
+
+        return subCategoryList.stream()
+                .map(SubCategoryDto.Response::toSubCategoryResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public SubCategory updateById(SubCategoryDto.UpdateRequest subCategoryDto) {
-        SubCategory subCategory = subCategoryRepository.findById(subCategoryDto.getId())
+    public List<SubCategoryDto.Response> findByCategoryId(Long categoryId) {
+        List<SubCategory> subCategoryList = subCategoryRepository.findByCategoryId(categoryId);
+
+        return subCategoryList.stream()
+                .map(SubCategoryDto.Response::toSubCategoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SubCategoryDto.Response updateById(Long id, String title) {
+        SubCategory subCategory = subCategoryRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.CATEGORY_NOT_FOUND));
-        subCategory.setTitle(subCategoryDto.getTitle());
+        subCategory.setTitle(title);
 
-        return subCategory;
+        return SubCategoryDto.Response.toSubCategoryResponse(subCategory);
+    }
+
+//    @Override
+//    public SubCategoryDto.Response findByTitle(String title) {
+//        SubCategory subCategory = subCategoryRepository.findByTitle(title)
+//                .orElseThrow(() -> new ApiException(ApiErrorCode.CATEGORY_NOT_FOUND));
+//
+//        return SubCategoryDto.Response.toSubCategoryResponse(subCategory);
+//    }
+
+    @Override
+    public List<SubCategoryByBrandIdDto> findByBrandId(Long brandId) {
+        return subCategoryRepository.findByBrandId(brandId);
     }
 
     @Override
-    public void deleteSubCategoryById(long id) {
+    public Boolean existsByTitle(String title) {
+        return subCategoryRepository.existsByTitle(title);
+    }
+
+    @Override
+    public void deleteById(Long id) {
         subCategoryRepository.deleteById(id);
     }
 }

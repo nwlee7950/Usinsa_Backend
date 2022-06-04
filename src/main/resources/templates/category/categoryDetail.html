@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header.html"></th:block>
+</head>
+
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card">
+                            <form class="form-horizontal form-view" th:object="${category}">
+
+                                <div class="card-header">
+                                    <div class="btn_wrap text-center">
+                                        <a th:href="@{/admin/category}" class="btn btn-secondary waves-effect waves-light">뒤로가기</a>
+                                        <a th:href="@{'/admin/category/edit/' + ${category.categoryId}}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="|deleteBlogCategory(${category.categoryId})|">삭제하기</button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <label class="col-sm-2 control-label">카테고리 이름</label>
+                                        <label class="col-sm-2 control-label" th:text="${category.title}"></label>
+                                    </div>
+                                    <div class="row align-items-start">
+                                        <label class="col-sm-2">세부 카테고리</label>
+                                        <ul class="col-sm-8">
+                                            <li th:each="subCategory: ${category.subCategoryList}">
+                                                <span th:text="${subCategory.title}"></span>
+                                                <a onclick=""></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+</body>
+
+<script>
+    function deleteBlogCategory(id) {
+        if(confirm("삭제하시겠습니까?")) {
+            fetch('http://localhost/usinsa/admin/category/delete/' + id, {
+                method: 'POST'
+            })
+                .then((data) => {
+                    console.log(data);
+                    window.location.href="http://localhost/usinsa/admin/category"
+                })
+                .catch((error) => {
+                    alert("삭제 실패");
+                });
+        }
+    }
+</script>
+
+</html>

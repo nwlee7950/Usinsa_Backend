@@ -9,8 +9,9 @@ import lombok.Setter;
 public class SubCategoryDto {
 
     @Getter
+    @Setter
     public static class Request{
-        private long categoryId;    // 큰 분류 categoryId
+        private Long categoryId;    // 큰 분류 categoryId
         private String title;
 
         public SubCategory toSubCategoryEntity(Category category){
@@ -21,18 +22,21 @@ public class SubCategoryDto {
         }
     }
 
+    @Getter
     @Setter
     @Builder
     public static class Response{
-        private long id;            // subCategoryId
-        private String subCategoryTitle;
-        private long categoryId;    // 큰 categoryId
+        private Long id;
         private String title;
+        private String categoryTitle;
+
+        public static SubCategoryDto.Response toSubCategoryResponse(SubCategory subCategory){
+            return SubCategoryDto.Response.builder()
+                    .id(subCategory.getId())
+                    .title(subCategory.getTitle())
+                    .categoryTitle(subCategory.getCategory().getTitle())
+                    .build();
+        }
     }
 
-    @Getter
-    public static class UpdateRequest{
-        private long id;
-        private String title;
-    }
 }

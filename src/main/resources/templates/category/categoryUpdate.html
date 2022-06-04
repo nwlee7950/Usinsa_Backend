@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header"></th:block>
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card-content">
+                            <form class="form-horizontal" th:action="'javascript:updateCategory(' + ${category.categoryId} + ')'" th:object="${category}" enctype="multipart/form-data" id="categoryForm">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">상품 카테고리</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" th:field="*{title}" class="form-control" placeholder="카테고리명을 입력해 주세요."/>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="subCategoryContainer">
+                                    <label class="col-sm-2 control-label">세부 카테고리</label>
+                                    <div class="col-sm-10 row mb-2" th:each="subcategory: ${category.subCategoryList}" th:id="'subcategory' + ${subcategory.subCategoryId}">
+                                        <input type="hidden" name="subCategoryList_id" th:value="${subcategory.subCategoryId}"> </input>
+                                        <input type="text"  th:value="${subcategory.title}" name="subCategoryList" class="form-control col-sm-10" placeholder="세부 카테고리명을 입력해 주세요."/>
+                                        <a class="form-control col-sm-1 text-center ml-2" th:onClick="'deleteSubCategory(' + ${subcategory.subCategoryId} + ')'">x</a>
+                                    </div>
+                                </div>
+
+                                <div class="btn_wrap text-left pb-4">
+                                     <a class="btn btn-primary waves-effect waves-light" onclick="addSubCategory();">추가</a>
+                                </div>
+
+                                <div class="btn_wrap text-center">
+                                    <a th:href="@{'/admin/category/' + *{categoryId}}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light" >저장하기</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+                <div class="modal" id="subCategoryTemplate">
+                    <input type="text"  class="form-control col-sm-10" name="addSubCategoryList" placeholder="세부 카테고리명을 입력해 주세요."/>
+                    <a class="form-control col-sm-1 text-center ml-2" >x</a>
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+
+<script>
+
+    function updateCategory(id){
+        var subCategoryTitleList = document.getElementsByName('subCategoryList');
+        if(emptyCheck(subCategoryTitleList)){
+            alert('빈칸인 상태로 제출할 수 없습니다.');
+        }
+
+        var subCategoryIdList = document.getElementsByName('subCategoryList_id');
+        var step;
+        for(step =0; step < subCategoryTitleList.length; step++){
+            console.log('id : ' + subCategoryIdList[step].value + ',  length : ' + subCategoryTitleList.length );
+            subCategoryTitleList[step].value = subCategoryIdList[step].value + ',,' + subCategoryTitleList[step].value;
+        }
+
+        var form = document.getElementById('categoryForm');
+        form.action ="/usinsa/admin/category/edit/"+id;
+        form.method ="POST";
+        form.submit();
+    }
+
+    function emptyCheck(subCategoryList){
+        var step=0;
+        for(step =0; step < subCategoryList.length; step++){
+            if(subCategoryList[step] != true){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function deleteSubCategory(id){
+        const div = document.getElementById('subcategory'+id);
+        const parentDiv = div.parentElement;
+
+        parentDiv.removeChild(div);
+    }
+
+    function addSubCategory(){
+        var div = document.createElement('div');
+        div.setAttribute('class', 'row col-sm-10 mb-2');
+
+        div.innerHTML = document.getElementById('subCategoryTemplate').innerHTML;
+        div.getElementsByTagName('a')[0].onclick = function(){
+            div = this.parentElement;
+            parentDiv = div.parentElement;
+            parentDiv.removeChild(div);
+        }
+
+        document.getElementById('subCategoryContainer').appendChild(div);
+    }
+
+</script>
+</body>
+</html>

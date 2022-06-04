@@ -1,5 +1,6 @@
 package com.spring.usinsa.model.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,18 +15,13 @@ public class ProductSize {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_detail_id")
-    private ProductDetail productDetailId;
+    private Long productDetailId;
+
     private int total;
 
-    private int size;
-    private String color;
-    private Float length;
+    private String size;
 
-    // 상의 기준
-    private Float sholderSize;
-    private Float bustSize;
-    private Float sleeveSize;
-
+    private Float size1;
+    private Float size2;
+    private Float size3;
 }

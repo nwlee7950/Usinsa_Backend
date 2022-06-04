@@ -16,6 +16,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,6 +46,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // 유효기간이 만료된 Access Token 일 경우, Refresh Token 을 통한 재발급이 필요하므로 Refresh Token 유효성 검사
             else if(StringUtils.hasText(refreshToken) && jwtTokenProvider.validateToken(refreshToken)) {
                 log.debug("Access Token is invalid, but Refresh Token is valid.");
+                throw new ApiException(ApiErrorCode.INVALID_TOKEN);
             }
             // 유효기간이 만료된 Access Token 만 있을 경우, Client 에 Refresh Token 을 같이 보내달라고 요청하는 예외 처리.
             else {

@@ -55,9 +55,10 @@ public enum ApiErrorCode {
 
     //PRODUCT
     PRODUCT_NOT_FOUND(10000, "조회 실패 또는 삭제된 상품입니다."),
-    BRAND_NOT_FOUND(10001, "브랜드 정보를 불러오는데 실패했습니다."),
-    CATEGORY_NOT_FOUND(10002, "CATEGORY 정보를 불러오는데 실패했습니다. "),
-    DeliveryInfo_NOT_FOUND(10002, " 배송 정보를 불러오는데 실패했습니다. "),
+    BRAND_NOT_FOUND(10010, "브랜드 정보를 불러오는데 실패했습니다."),
+    CATEGORY_NOT_FOUND(10020, "CATEGORY 정보를 불러오는데 실패했습니다. "),
+    CATEGORY_TITLE_DUPLICATED(10021, "이미 존재하는 카테고리 이름이 있습니다."),
+    DeliveryInfo_NOT_FOUND(10030, " 배송 정보를 불러오는데 실패했습니다. "),
 
     TEMP(0, "TEMP");
 

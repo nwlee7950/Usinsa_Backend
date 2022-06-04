@@ -1,9 +1,14 @@
 package com.spring.usinsa.repository;
 
+import com.spring.usinsa.dto.product.BrandBySubCategoryDto;
+import com.spring.usinsa.dto.product.BrandDto;
 import com.spring.usinsa.dto.product.ProductDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.product.Brand;
+import com.spring.usinsa.model.product.Category;
 import com.spring.usinsa.model.product.Product;
+import com.spring.usinsa.model.product.SubCategory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -15,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,13 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)    // (replace = Replace.NONE)를 통해서 TestDatabaseAutoConfiguration 에서 DataSource 가 bean 으로 등록되지 않게 하면 DataSourceAutoConfiguration 에 의해서 DataSource 가 등록되게 된다.
 public class ProductRepositoryTest {
 
-    @Mock
+    @Autowired
     private ProductRepository productRepository;
 
-    @Mock
-    private BrandRepository brandRepository;
-
-    @Mock
+    @Autowired
     private SubCategoryRepository subCategoryRepository;
 
     private static final String gender = "male";
@@ -37,8 +41,6 @@ public class ProductRepositoryTest {
     private static final long brandId = 1;
     private static final long subCategoryId = 1;
 
-
-
     @Test
     public void save(){
         // given
@@ -46,34 +48,75 @@ public class ProductRepositoryTest {
                 .gender(gender)
                 .price(price)
                 .title(title)
-                .brand(brandRepository.findById(brandId).orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND)))
-                .subCategory(subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND))).build();
+                .brand(buildBrand())
+                .subCategory(buildSubCategory()).build();
 
         //when
-        Product productResult = productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
         //then
-        assertThat(productResult.getId()).isNotNull();
+        assertThat(savedProduct).isNotNull();
     }
 
     @Test
     public void findProduct(){
         // given
-        ProductDto.FindProductRequest productRequestDto = ProductDto.FindProductRequest.builder()
-                .subCategoryId(subCategoryId)
-                .brandId(brandId)
-                .sort("price")
-                .price1(0)
-                .price2(100000).build();
+        Product product = Product.builder()
+                .gender(gender)
+                .price(price)
+                .title(title)
+                .brand(buildBrand())
+                .subCategory(buildSubCategory()).build();
+        Product savedProduct = productRepository.save(product);
 
-        Page<Product> products = productRepository.findByBrandId(brandId, PageRequest.of(1, 20));
-        Page<Product> products2 = productRepository.findByBrandIdAndGender(brandId, gender, PageRequest.of(1, 20));
-        Page<Product> products3 = productRepository.findByBrandIdAndSubCategoryId(brandId, subCategoryId, PageRequest.of(1, 20));
+        //when, find
 
-        assertThat(products.getTotalElements()).isNotNull();
-//        assertThat(products.get)
+        //and id
+            Product findProduct = productRepository.findById(savedProduct.getId())
+                    .orElseThrow(() -> new ApiException(ApiErrorCode.PRODUCT_NOT_FOUND));
 
+        //and brandId
+        Page<Product> products = productRepository.findByBrandId(savedProduct.getBrand().getId(), PageRequest.of(0, 20));
+
+        //and subCategory
+        Page<Product> products2 = productRepository.findByBrandIdAndGender(savedProduct.getBrand().getId(), savedProduct.getGender(), PageRequest.of(0, 20));
+
+        //and BrandIdAndSubCategory
+        Page<Product> products3 = productRepository.findByBrandIdAndSubCategoryId(savedProduct.getBrand().getId(), savedProduct.getSubCategory().getId(), PageRequest.of(0, 20));
+
+        //then
+        assertThat(findProduct).isNotNull();
+        assertThat(products).isNotNull();
+        assertThat(products2).isNotNull();
+        assertThat(products3).isNotNull();
+
+        assertThat(findProduct.getId()).isEqualTo(savedProduct.getId());
+        assertThat(products.getTotalElements()).isGreaterThan(0);
+        assertThat(products2.getTotalElements()).isGreaterThan(0);
+        assertThat(products3.getTotalElements()).isGreaterThan(0);
     }
 
+
+
+    private Brand buildBrand(){
+        return  Brand.builder()
+                .title("테스트 브랜드")
+                .enTitle("test brand")
+                .image("image.png")
+                .info("test").build();
+    }
+
+    private SubCategory buildSubCategory(){
+        return SubCategory.builder()
+                .title("테스트 서브 카테고리")
+                .category(buildCategory())
+                .build();
+    }
+
+    private Category buildCategory(){
+        return Category.builder()
+                .title("테스트 카테고리")
+                .build();
+    }
 
 }

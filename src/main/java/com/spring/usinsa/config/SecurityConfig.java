@@ -2,6 +2,7 @@ package com.spring.usinsa.config;
 
 import com.spring.usinsa.filter.AdminFilter;
 import com.spring.usinsa.filter.JwtAuthenticationFilter;
+import com.spring.usinsa.filter.JwtExceptionFilter;
 import com.spring.usinsa.util.JwtTokenProvider;
 import com.spring.usinsa.serviceImpl.AdminUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class SecurityConfig{
                     .loginPage("/admin/login")
                     .usernameParameter("username")
                     .passwordParameter("password")
-                    .defaultSuccessUrl("/admin")
+                    .defaultSuccessUrl("/admin/brand")
                     .and()
                     .logout()
                     .logoutUrl("/admin/logout")
@@ -58,8 +59,8 @@ public class SecurityConfig{
                     .and()
                     .authorizeRequests()    // 요청에 대한 사용권한 체크
                     .antMatchers("/admin/login").permitAll()
-                    .antMatchers("/**").hasAnyRole("ADMIN", "ROLE_SUPER_ADMIN")
-                    .antMatchers("/admin/**").hasAnyRole("ADMIN", "ROLE_SUPER_ADMIN")
+//                    .antMatchers("/**").hasAnyRole("ADMIN", "ROLE_SUPER_ADMIN")
+                    .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
                     .and()
                     .addFilterAfter(new AdminFilter(), UsernamePasswordAuthenticationFilter.class);
         }
@@ -133,15 +134,17 @@ public class SecurityConfig{
 
                     .and()
                     .authorizeRequests()    // 요청에 대한 사용권한 체크
-                    .antMatchers("/api/v1/sign-in", "/api/v1/sign-up-step-one",
+                    .antMatchers("/**").permitAll()
+/*                    .antMatchers("/api/v1/sign-in", "/api/v1/sign-up-step-one",
                             "/api/v1/find-username", "/api/v1/find-password",
                             "/api/v1/verify-code", "/api/v1/reset-password",
                             "/api/v1/images", "/api/v1/register-routes",
-                            "/api/v1/oauth/**", "/api/v1/auth/refresh-token").permitAll()
+                            "/api/v1/oauth/**", "/api/v1/auth/refresh-token").permitAll() */
                     .anyRequest().authenticated()  // 나머지는 권한이 있기만 하면 접근 가능
                     // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 이전에 넣는다.
                     .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
         }
     }
 }

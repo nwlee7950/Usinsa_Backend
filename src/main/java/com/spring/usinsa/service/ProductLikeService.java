@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 public interface ProductLikeService {
 
-    ProductLike createProductLike(long userId, long productId);
-    void deleteProductLikeByUserIdAndProductId(long userId, long productId);
+    ProductLike save(Long userId, Long productId);
+    void deleteProductLikeByUserIdAndProductId(Long userId, Long productId);
 
-    Boolean existsProductLikeByUserIdAndProductId(long userId, long productId);
-    long countProductLikeByProductId(long productId);
-    Page<ProductLike> countProductLikeByUserId(long userId, Pageable pageable);
+    Boolean existsProductLikeByUserIdAndProductId(Long userId, Long productId);
+    int countByProductId(Long productId);
+    Page<ProductLike> countProductLikeByUserId(Long userId, Pageable pageable);
 }

@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableJpaAuditing
 @SpringBootApplication
@@ -27,4 +29,5 @@ public class UsinsaApplication {
 				.baseUrl("http://localhost") 	// 80 포트 사용중이므로 localhost:8080 이 아닌 localhost
 				.build();
 	}
+
 }

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BrandDto {
 
     @Getter
+    @Setter
     public static class Request {
         private String title;
         private String enTitle;
@@ -24,39 +25,29 @@ public class BrandDto {
     }
 
     @Getter
-    public static class UpdateRequest{
-        private long id;
-        private String title;
-        private String enTitle;
-        private String info;
-        private MultipartFile image;
-
-    }
-
-    @Setter
     @Builder
     public static class Response{
-        private long brandId;
-        private long productTotal;
+        private Long brandId;
         private String title;
         private String enTitle;
         private String image;
-    }
+        private String info;
 
-    @Setter
-    public static class ResponseBySubCategory{
-        private long brandId;
-        private long productTotal;
-        private String brandTitle;
-        private String subCategory;
-//        private Boolean brandLike;
-//        private Boolean discount;
-
-        public ResponseBySubCategory(long brandId, long productTotal, String brandTitle, String subCategory){
+        public Response(Long brandId, String title, String enTitle, String image, String info){
             this.brandId = brandId;
-            this.productTotal = productTotal;
-            this.brandTitle = brandTitle;
-            this.subCategory = subCategory;
+            this.title = title;
+            this.enTitle = enTitle;
+            this.image = image;
+            this.info = info;
+        }
+
+        public static BrandDto.Response toBrandDtoResponse(Brand brand){
+            return BrandDto.Response.builder()
+                    .brandId(brand.getId())
+                    .title(brand.getTitle())
+                    .enTitle(brand.getEnTitle())
+                    .info(brand.getInfo())
+                    .image(brand.getImage()).build();
         }
     }
 

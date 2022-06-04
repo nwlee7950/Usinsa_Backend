@@ -33,11 +33,11 @@ public class TokenRestController {
         String refreshToken = jwtTokenProvider.resolveRefreshToken(request);
 
         // TokenRequestDto 생성
-        TokenDto.Request tokenRequestDto = tokenService.setTokenRequestDto(accessToken, refreshToken);
+//        TokenDto.Request tokenRequestDto = tokenService.setTokenRequestDto(accessToken, refreshToken);
 
         // Refresh 토큰 검증 및 Access Token 재발급
-        TokenDto tokenDto = tokenService.refresh(tokenRequestDto);
-
-        return apiResponseService.getSingleResult(tokenDto);
+//        TokenDto tokenDto = tokenService.refresh(tokenRequestDto);
+return null;
+//        return apiResponseService.getSingleResult(tokenDto);
     }
 }

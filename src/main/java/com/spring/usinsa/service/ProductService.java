@@ -8,17 +8,12 @@ import org.springframework.data.domain.Pageable;
 public interface ProductService {
 
     Product save(ProductDto.Request productDto) throws Exception;
-    Product findById(long productId);
+    ProductDto.Response findById(Long productId);
+    Product findByIdAsEntity(Long productId);
+    Page<ProductDto.SimpleResponse> findAllAsSimpleDto(Pageable pageable);
+    Page<ProductDto.Response> findAll(Pageable pageable);
+    Page<ProductDto.Response> findByProductRequest(Long categoryId, Long brandId, Pageable pageable);
+    ProductDto.Response update(ProductDto.UpdateRequest productDto, Long id) throws Exception;
 
-    Page<Product> findByBrandId(long brandId, Pageable pageable);
-    Page<Product> findByBrandIdAndGender(long brandId, String gender, Pageable pageable);
-    Page<Product> findByBrandIdAndSubCategoryId(long brandId, long subCategoryId, Pageable pageable);
-    Page<Product> findBySubCategoryId(long categoryId, Pageable pageable);
-    Page<Product> findByGender(String gender, Pageable pageable);
-    Page<Product> findByPriceBetween(int price1, int price2, long SubCategoryId, Pageable pageable);
-
-    Page<ProductDto> findByProductRequest(ProductDto.FindProductRequest findProductRequest);
-
-    Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) throws Exception;
-    void deleteById(long productId);
+    void deleteById(Long productId);
 }

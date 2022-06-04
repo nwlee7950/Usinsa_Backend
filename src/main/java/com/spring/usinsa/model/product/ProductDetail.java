@@ -1,8 +1,6 @@
 package com.spring.usinsa.model.product;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,6 +8,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ProductDetail {
 
@@ -20,12 +20,13 @@ public class ProductDetail {
     private String contentImage;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(fetch = FetchType.LAZY , mappedBy = "productDetailId")
+    @OneToMany
+    @JoinColumn(name = "productDetailId")
     private List<ProductImage> productImages;
 
-    @OneToMany(fetch = FetchType.LAZY , mappedBy = "productDetailId")
+    @OneToMany
+    @JoinColumn(name = "productDetailId")
     private List<ProductSize> productSize;
 }

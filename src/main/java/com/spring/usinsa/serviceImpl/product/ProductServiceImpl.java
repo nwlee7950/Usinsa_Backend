@@ -1,15 +1,16 @@
 package com.spring.usinsa.serviceImpl.product;
 
+import com.spring.usinsa.dto.product.ProductDetailDto;
 import com.spring.usinsa.dto.product.ProductDto;
 import com.spring.usinsa.exception.ApiErrorCode;
 import com.spring.usinsa.exception.ApiException;
 import com.spring.usinsa.model.product.Brand;
 import com.spring.usinsa.model.product.Product;
 import com.spring.usinsa.model.product.SubCategory;
+import com.spring.usinsa.repository.BrandRepository;
 import com.spring.usinsa.repository.ProductRepository;
-import com.spring.usinsa.service.BrandService;
-import com.spring.usinsa.service.ProductService;
-import com.spring.usinsa.service.SubCategoryService;
+import com.spring.usinsa.repository.SubCategoryRepository;
+import com.spring.usinsa.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,82 +25,84 @@ import com.spring.usinsa.serviceImpl.MinioService;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final BrandService brandService;
-    private final SubCategoryService subCategoryService;
+    private final BrandRepository brandRepository;
+    private final ProductDetailService productDetailService;
+    private final SubCategoryRepository subCategoryRepository;
     private final MinioService minioService;
+    private final ProductLikeService productLikeService;
 
     private final String PRODUCT_FOLDER = "product/";
   
     @Override
-    public Product save(ProductDto.Request productDto) throws Exception {
+    public Product save(ProductDto.Request productDto) throws Exception{
+        Brand brand = brandRepository.findById(productDto.getBrandId())
+                .orElseThrow(() -> new ApiException(ApiErrorCode.BRAND_NOT_FOUND));
+
+        SubCategory subCategory = subCategoryRepository.findById(productDto.getSubCategoryId())
+                .orElseThrow(() -> new ApiException(ApiErrorCode.CATEGORY_NOT_FOUND));
+
         String uploadedTitleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
-        Brand brand = brandService.findById(productDto.getBrandId());
-        SubCategory subCategory = subCategoryService.findById(productDto.getSubCategoryId());
+        Product savedProduct = productRepository.save(productDto.toProductEntity(uploadedTitleImage, brand, subCategory));
 
-        Product product = productDto.toProductEntity(uploadedTitleImage, brand, subCategory);
+        ProductDetailDto.Request productDetail = ProductDetailDto.Request.builder()
+                .product(savedProduct)
+                .contentImage(productDto.getContentImage())
+                .productImageList(productDto.getSubImageList())
+                .productSizeList(productDto.getProductSizeList())
+                .build();
 
-        return productRepository.save(product);
+        productDetailService.save(productDetail);
+
+        return savedProduct;
     }
 
     @Override
-    public Product findById(long productId) {
+    public ProductDto.Response findById(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.PRODUCT_NOT_FOUND));
 
-        return product;
+        return ProductDto.Response.toProductDtoResponse(product);
     }
 
     @Override
-    public Page<Product> findByBrandId(long brandId, Pageable pageable) {
-        Page<Product> products = productRepository.findByBrandId(brandId, pageable);
-
-        return products;
+    public Product findByIdAsEntity(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ApiException(ApiErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @Override
-    public Page<Product> findByBrandIdAndGender(long brandId, String gender, Pageable pageable) {
-        Page<Product> products = productRepository.findByBrandIdAndGender(brandId, gender, pageable);
-
-        return products;
+    public Page<ProductDto.Response> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductDto.Response::toProductDtoResponse);
     }
 
-    @Override
-    public Page<Product> findByBrandIdAndSubCategoryId(long brandId, long subCategoryId, Pageable pageable) {
-        return null;
+    public Page<ProductDto.SimpleResponse> findAllAsSimpleDto(Pageable pageable){
+        return productRepository.findAll(pageable)
+                .map(ProductDto.SimpleResponse::toProductDtoSimpleResponse);
     }
 
-    @Override
-    public Page<Product> findBySubCategoryId(long categoryId, Pageable pageable) {
-        Page<Product> products = productRepository.findBySubCategoryId(categoryId, pageable);
+    public Page<ProductDto.Response> findByProductRequest(Long categoryId, Long brandId, Pageable pageable) {
 
-        return products;
-    }
-
-    @Override
-    public Page<Product> findByGender(String gender, Pageable pageable) {
-        Page<Product> products = productRepository.findByGender(gender, pageable);
-
-        return products;
-    }
-
-    @Override
-    public Page<Product> findByPriceBetween(int price1, int price2, long SubCategoryId, Pageable pageable) {
-        return productRepository.findByPriceBetweenAndSubCategoryId(price1, price2, SubCategoryId, pageable);
-    }
-
-    @Override
-    public Page<ProductDto> findByProductRequest(ProductDto.FindProductRequest findProductRequest) {
-
-        //TODO
-        //검색 조건 마다 IF문 또는 CASE 작성?
-
-        return null;
+        if(brandId != null && brandId > 0){
+            if(categoryId != null && categoryId > 0){
+                return findByBrandIdAndSubCategoryId(brandId, categoryId, pageable);
+            }else{
+                return findByBrandId(brandId, pageable);
+            }
+        }else{
+            if(categoryId != null && categoryId > 0){
+                return findBySubCategoryId(categoryId, pageable);
+            }else{
+                return findAll(pageable);
+            }
+        }
     }
 
     @Override
     @Transactional
-    public Product updateProduct(Long productId, ProductDto.UpdateRequest productDto) throws Exception {
-        Product product = findById(productDto.getId());
+    public ProductDto.Response update(ProductDto.UpdateRequest productDto, Long id) throws Exception {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ApiErrorCode.PRODUCT_NOT_FOUND));
 
         String titleImage = minioService.upsertFile(null, PRODUCT_FOLDER, productDto.getTitleImage());
         minioService.removeFile(PRODUCT_FOLDER+product.getImage());
@@ -111,14 +114,35 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountEndDate(productDto.getDiscountEndDate());
         product.setDiscountRate(productDto.getDiscountRate());
         product.setGender(productDto.getGender());
-        product.setSubCategory(subCategoryService.findById(productDto.getSubCategoryId()));
+        product.setSubCategory(subCategoryRepository.findById(productDto.getSubCategoryId())
+                .orElseThrow(() -> new ApiException(ApiErrorCode.CATEGORY_NOT_FOUND)));
 
-        return product;
+        return ProductDto.Response.toProductDtoResponse(product);
     }
 
     @Override
-    public void deleteById(long productId) {
-        productRepository.deleteById(productId);
+    @Transactional
+    public void deleteById(Long id) {
+        productDetailService.deleteByProductId(id);
+
+        productRepository.deleteById(id);
     }
 
+    public Page<ProductDto.Response> findByBrandId(Long brandId, Pageable pageable) {
+
+        return productRepository.findByBrandId(brandId, pageable)
+                .map(m -> ProductDto.Response.toProductDtoResponse(m, productLikeService.countByProductId(m.getId())));
+    }
+
+    public Page<ProductDto.Response> findByBrandIdAndSubCategoryId(Long brandId, Long subCategoryId, Pageable pageable) {
+
+        return productRepository.findByBrandIdAndSubCategoryId(brandId, subCategoryId, pageable)
+                .map(m -> ProductDto.Response.toProductDtoResponse(m, productLikeService.countByProductId(m.getId())));
+    }
+
+    public Page<ProductDto.Response> findBySubCategoryId(Long categoryId, Pageable pageable) {
+
+        return productRepository.findBySubCategoryId(categoryId, pageable)
+                .map(m -> ProductDto.Response.toProductDtoResponse(m, productLikeService.countByProductId(m.getId())));
+    }
 }

@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
     @Override
     Optional<ProductDetail> findById(Long id);
+    Optional<ProductDetail> findByProductId(Long productId);
 }

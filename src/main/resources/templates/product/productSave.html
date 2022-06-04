@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header"></th:block>
+    <!-- Editor's Style -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card-content">
+                            <form class="form-horizontal" th:action="@{/admin/product/add}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" id="editorContent" name="editorContent"/>
+
+                                <div class="form-group row">
+                                    <label for="title" class="col-sm-2 input-group-text">상품명</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="title" name="title" class="form-control" placeholder="상품 이름을 입력해 주세요." />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 input-group-text">카테고리</label>
+                                    <select class="col-sm-2" style="margin-left: 0.75rem;" name="subCategoryId">
+                                        <option th:each="subcategory: ${categoryList}" th:text="${subcategory.title}" th:value="${subcategory.id}"/>
+                                    </select>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 input-group-text" >브랜드</label>
+                                    <select class="col-sm-2" style="margin-left: 0.75rem;" name="brandId">
+                                        <option th:each="brand: ${brandList}" th:text="${brand.title}" th:value="${brand.brandId}" ></option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 input-group-text">상품 정보</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="contentImage" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="title" class="col-sm-2 input-group-text">상품 가격</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="price" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="title" class="col-sm-2 input-group-text">성별</label>
+                                    <div class="col-sm-8 nav-item">
+                                        <input type="radio" name="gender" class="nav-item" value="남성">남성</input>
+                                        <input type="radio" name="gender" class="nav-item" value="여성">여성</input>
+                                        <input type="radio" name="gender" class="nav-item" value="구분없음">구분없음</input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <span class="col-sm-2 input-group-text">상품 이미지</span>
+                                    <div class="col-sm-8">
+                                        <div>
+                                           <span class="col-sm-2">대표 이미지</span>
+                                           <input type="file" name="titleImage" class="form-control col-sm-10" />
+                                        </div>
+                                        <div class="pt-1">
+                                            <span name="image1" class="col-sm-2">서브 이미지</span>
+                                            <div id="subImageContainer"></div>
+                                        </div>
+                                        <div class="btn_wrap text-left pl-4 pb-2">
+                                            <a class="btn btn-primary waves-effect waves-light" onclick="addSubImageItem();">추가</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 input-group-text">사이즈</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-group" id="sizeContainer"></div>
+                                        <div class="btn_wrap text-left pl-4 pb-2">
+                                            <a class="btn btn-primary waves-effect waves-light" onclick="addSizeItem();">추가</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="discountStartDate" value="0"/>
+                                <input type="hidden" name="discountEndDate" value="0"/>
+                                <input type="hidden" name="discountRate" value="0"/>
+                                <div class="btn_wrap text-center mb-8">
+                                    <a th:href="@{/admin/product}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">저장하기</button>
+                                </div>
+                            </form>
+
+                            <div class="modal" id="sizeTemplate">
+                                <input type="text"  class="form-control col-sm-1" name="productSizeList[index].size" placeholder="사이즈 명을 입력해 주세요."/>
+                                <input type="text"  class="form-control col-sm-1 ml-1" name="productSizeList[index].size1" placeholder="사이즈1을 입력해 주세요."/>
+                                <input type="text"  class="form-control col-sm-1 ml-1" name="productSizeList[index].size2" placeholder="사이즈2을 입력해 주세요."/>
+                                <input type="text"  class="form-control col-sm-1 ml-1" name="productSizeList[index].size3" placeholder="사이즈3을 입력해 주세요."/>
+                                <input type="text"  class="form-control col-sm-1 ml-1" name="productSizeList[index].total" placeholder="상품 개수를 입력해 주세요."/>
+                                <a class="form-control col-sm-1 text-center ml-2" >x</a>
+                            </div>
+
+                            <div class="modal" id="subImageItemTemplate">
+                                <input type="file" name="subImageList[index].image" class="form-control col-sm-10" />
+                                <a class="form-control col-sm-1 text-center ml-2" >x</a>
+                            </div>
+
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+
+<!-- Toast UI -->
+<script>
+    let sizeIndex=0;
+    let subImageIndex=0;
+
+    function addSizeItem(){
+        var div = document.createElement('div');
+        div.setAttribute('class', 'row col-sm-10 mb-2');
+
+        div.innerHTML = document.getElementById('sizeTemplate').innerHTML;
+        div.getElementsByTagName('a')[0].onclick = function(){
+            div = this.parentElement;
+            parentDiv = div.parentElement;
+            parentDiv.removeChild(div);
+        }
+
+        var inputList = div.getElementsByTagName('input');
+        for(var i=0; i<inputList.length; i++){
+            inputList[i].name = inputList[i].name.replace('index', sizeIndex);
+        }
+        sizeIndex++;
+
+        document.getElementById('sizeContainer').appendChild(div);
+    }
+
+    function addSubImageItem(){
+        var div = document.createElement('div');
+        div.setAttribute('class', 'row col-sm-12 mb-2');
+
+        div.innerHTML = document.getElementById('subImageItemTemplate').innerHTML;
+        div.getElementsByTagName('a')[0].onclick = function(){
+            div = this.parentElement;
+            parentDiv = div.parentElement;
+            parentDiv.removeChild(div);
+        }
+
+        var inputList = div.getElementsByTagName('input');
+        inputList[0].name = inputList[0].name.replace('index', subImageIndex);
+        subImageIndex++;
+
+        document.getElementById('subImageContainer').appendChild(div);
+    }
+</script>
+</body>
+</html>

@@ -2,11 +2,9 @@ package com.spring.usinsa.serviceImpl.inquiry;
 
 import com.spring.usinsa.dto.inquiry.QnADto;
 import com.spring.usinsa.model.inquiry.Qna;
-import com.spring.usinsa.model.inquiry.QnaCategory;
 import com.spring.usinsa.repository.QnARepository;
 import com.spring.usinsa.service.QnAService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,17 +16,9 @@ public class QnAServiceImpl implements QnAService {
     QnARepository qnARepository;
 
     @Override
-    public Qna save(QnADto qnaDto, long userId) {
+    public Qna save(QnADto.Request qnaDto, long userId) {
 
-        return qnARepository.save(Qna.builder()
-                .userId(userId)
-                .email(qnaDto.getEmail())
-                .name(qnaDto.getName())
-                .title(qnaDto.getTitle())
-                .body(qnaDto.getBody())
-                .createdAt(qnaDto.getCreatedAt())
-                .phone(qnaDto.getPhone())
-                .qnaCategory(QnaCategory.EXCHANEGE).build());
+        return qnARepository.save(qnaDto.toQnaEntity(userId));
     }
 
     @Override

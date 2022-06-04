@@ -1,8 +1,11 @@
 package com.spring.usinsa.controller.api.v1;
 
 import com.spring.usinsa.dto.UserResetPasswordRequestDto;
+import com.spring.usinsa.model.User;
+import com.spring.usinsa.model.UserProfile;
 import com.spring.usinsa.model.VerificationCode;
 import com.spring.usinsa.response.CommonResponse;
+import com.spring.usinsa.response.SingleResponse;
 import com.spring.usinsa.service.UserService;
 import com.spring.usinsa.service.VerificationCodeService;
 import com.spring.usinsa.serviceImpl.ApiResponseService;
@@ -10,10 +13,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 
 @Api(tags = {"5. User "})
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserRestController {
 
     private final UserService userService;
@@ -38,5 +40,15 @@ public class UserRestController {
         userService.resetPassword(verificationCode.getUserId(), userResetPasswordRequestDto);
 
         return apiResponseService.getSuccessResult();
+    }
+
+    @ApiOperation(value = "사용자 프로필 정보 출력", notes = "사용자 프로필 정보를 출력합니다.")
+    @GetMapping
+    public SingleResponse<User> getUser(@AuthenticationPrincipal User user) {
+
+        // 사용자 프로필 정보
+        User findUser = userService.findById(user.getId());
+
+        return apiResponseService.getSingleResult(findUser);
     }
 }

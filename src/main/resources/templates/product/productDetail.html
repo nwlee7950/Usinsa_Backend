@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block layout:fragment="header" th:include="fragments/header.html"></th:block>
+</head>
+
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <th:block layout:fragment="sidebar" th:include="fragments/sidebar"></th:block>
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+
+            <th:block layout:fragment="topbar" th:include="fragments/topbar"></th:block>
+
+            <th:block layout:fragment="content">
+                <div class="content">
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <div class="card">
+                            <form class="form-horizontal form-view">
+
+                                <div class="card-header">
+                                    <div class="btn_wrap text-center">
+                                        <a th:href="@{/admin/product}" class="btn btn-secondary waves-effect waves-light">뒤로가기</a>
+                                        <a th:href="@{'/admin/product/edit/' + ${product.product.id}}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+                                        <button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="|deleteBlogCategory(${product.product.id})|">삭제하기</button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 이름</label>
+                                        <label class="col-sm-2 pt-xl-2" th:text="${product.product.title}"></label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 브랜드</label>
+                                        <label class="col-sm-2 pt-xl-2" th:text="${product.product.brand.title}"></label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 카테고리</label>
+                                        <label class="col-sm-2 pt-xl-2" th:text="${product.product.categoryTitle} + ' - ' + ${product.product.subCategoryTitle}"></label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 가격</label>
+                                        <label class="col-sm-2 pt-xl-2" th:text="${product.product.price}"></label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 이미지</label>
+                                        <image class="col-sm-4" th:src="@{${@environment.getProperty('minio.url')} + ${@environment.getProperty('minio.bucket')} + '/'+ ${product.product.titleImage}}"></image>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 input-group-text">상품 정보</label>
+                                        <image class="col-sm-4" th:src="@{${@environment.getProperty('minio.url')} + ${@environment.getProperty('minio.bucket')} + '/'+ ${product.image}}"></image>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card-content -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer -->
+<th:block layout:fragment="footer" th:include="fragments/footer"></th:block>
+</body>
+
+<script>
+    function deleteBlogCategory(id) {
+        if(confirm("삭제하시겠습니까?")) {
+            fetch('http://localhost/usinsa/api/v1/product/' + id, {
+                method: 'DELETE',
+            })
+                .then(res => res.json()) // or res.json()
+                .then(json => {
+                    console.log(json);
+//                    window.location.href="http://localhost/usinsa/admin/product"
+                });
+        }
+    }
+</script>
+
+</html>
