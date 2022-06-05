@@ -27,10 +27,11 @@ public class ProductImageServiceImpl implements ProductImageService {
     private final String PRODUCT_SUBIMAGE_FOLDER ="product/sub/";
 
     @Override
-    public void save(ProductImageDto.Request productImageDto) {
+    public void save(MultipartFile image, Long productDetailId) {
         try{
-            String uploadedImage = minioService.upsertFile(null, PRODUCT_SUBIMAGE_FOLDER, productImageDto.getImage());
-            productImageRepository.save(productImageDto.toProductImageEntity(uploadedImage));
+            String uploadedImage = minioService.upsertFile(null, PRODUCT_SUBIMAGE_FOLDER, image);
+            productImageRepository.save(ProductImage.builder()
+                    .image(uploadedImage).productDetailId(productDetailId).build());
         }catch (Exception e) {
             new ApiException(ApiErrorCode.MINIO_INVALID_UPLOAD_REQUEST);
         }

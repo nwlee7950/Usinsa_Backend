@@ -30,17 +30,17 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
         String uploadedImage = minioService.upsertFile(null, PRODUCT_DETAIL, productDetailDto.getContentImage());
 
-        ProductDetail ProductDetail = productDetailRepository.save(productDetailDto.toProductDetailEntity(uploadedImage));
+        ProductDetail productDetail = productDetailRepository.save(productDetailDto.toProductDetailEntity(uploadedImage));
 
         for (ProductImageDto.Request productImage : productDetailDto.getProductImageList()) {
-            productImageService.save(productImage);
+            productImageService.save(productImage.getImage(), productDetail.getId());
         }
 
         for (ProductSizeDto productSize : productDetailDto.getProductSizeList()) {
-            productSizeService.save(productSize, ProductDetail.getId());
+            productSizeService.save(productSize, productDetail.getId());
         }
 
-        return ProductDetail;
+        return productDetail;
     }
 
     @Override
