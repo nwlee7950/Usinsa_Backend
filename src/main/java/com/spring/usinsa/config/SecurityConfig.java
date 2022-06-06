@@ -18,6 +18,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity  // Spring Security 설정 활성화
 @Configuration
@@ -122,7 +125,7 @@ public class SecurityConfig{
         protected void configure(HttpSecurity http) throws Exception {     // 페이지 별 접근 권한 설정
             http
                     .antMatcher("/api/v1/**")
-                    .cors()
+                    .cors()                         // .configurationSource(corsConfigurationSource()) 를 등록해줘야한다는 글도 있지만 .cors()를 설정하면 filter chain에 security의 corsFilter가 추가되고 corsFilter는 Bean에 등록한 CorsConfigurationSource를 받아 사용되는 듯하다.
                     .and()
                     .csrf().disable()
                     .httpBasic().disable()
@@ -145,6 +148,21 @@ public class SecurityConfig{
                     .and()
                     .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+        }
+
+        // cors설정 클래스를 빈으로 등록해주면 서버는 브라우저의 preflight 요청에 적절한 헤더를 추가한 response로 응답
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration configuration = new CorsConfiguration();
+
+            configuration.addAllowedOriginPattern("*");
+            configuration.addAllowedHeader("*");
+            configuration.addAllowedMethod("*");
+            configuration.setAllowCredentials(true);
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
         }
     }
 }

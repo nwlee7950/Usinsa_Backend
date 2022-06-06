@@ -24,7 +24,6 @@ import javax.websocket.server.PathParam;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/product")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ProductRestController {
 
     private final ApiResponseService apiResponseService;
