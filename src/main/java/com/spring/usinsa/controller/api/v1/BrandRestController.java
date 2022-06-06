@@ -6,7 +6,6 @@ import com.spring.usinsa.response.SingleResponse;
 import com.spring.usinsa.service.BrandService;
 import com.spring.usinsa.serviceImpl.ApiResponseService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,14 +33,14 @@ public class BrandRestController {
     }
 
     @PostMapping
-    public SingleResponse<BrandDto.Response> save(@ModelAttribute BrandDto.Request brandDto) throws Exception{
+    public SingleResponse<BrandDto.Response> save(@RequestBody BrandDto.Request brandDto) throws Exception{
         BrandDto.Response brand = brandService.save(brandDto);
 
         return apiResponseService.getSingleResult(brand);
     }
 
     @PostMapping("/edit/{id}")
-    public SingleResponse<BrandDto.Response> updateBrand(@ModelAttribute BrandDto.Request brandDto, @PathVariable("id") Long id) throws Exception{
+    public SingleResponse<BrandDto.Response> updateBrand(@RequestBody BrandDto.Request brandDto, @PathVariable("id") Long id) throws Exception{
         BrandDto.Response brand = brandService.update(brandDto, id);
 
         return apiResponseService.getSingleResult(brand);

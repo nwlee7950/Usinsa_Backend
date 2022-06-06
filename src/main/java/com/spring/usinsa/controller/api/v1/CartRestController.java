@@ -7,10 +7,6 @@ import com.spring.usinsa.response.SingleResponse;
 import com.spring.usinsa.service.CartService;
 import com.spring.usinsa.serviceImpl.ApiResponseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +30,7 @@ public class CartRestController {
     }
 
     @PostMapping
-    public SingleResponse<CartResponseDto> save(@AuthenticationPrincipal User user, @ModelAttribute CartDto cartDto) {
+    public SingleResponse<CartResponseDto> save(@AuthenticationPrincipal User user, @RequestBody CartDto cartDto) {
         cartDto.setUserId(user.getId());
 
         return apiResponseService.getSingleResult(cartService.save(cartDto));

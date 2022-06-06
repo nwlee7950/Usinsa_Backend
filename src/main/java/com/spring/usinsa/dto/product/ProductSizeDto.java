@@ -16,7 +16,7 @@ public class ProductSizeDto {
     private Float size2;
     private Float size3;
     private int total;
-    private Long sizeId = 0l;
+    private Long sizeId;
 
     public ProductSize toProductSizeEntity(Long productDetailId){
         return ProductSize.builder()
