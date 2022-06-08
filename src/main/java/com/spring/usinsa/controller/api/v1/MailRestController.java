@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.Map;
 
 @Api(tags = {"3. Send Email "})
 @Slf4j
@@ -57,10 +58,10 @@ public class MailRestController {
 
     @ApiOperation(value = "url, code 이메일 발송", notes = "가입한 이메일로 비밀번호 재설정이 가능한 url, code 발송")
     @PostMapping("/reset-password")
-    public CommonResponse resetPassword(@RequestParam String username) throws MessagingException {
+    public CommonResponse resetPassword(@RequestBody Map<String, String> username) throws MessagingException {
 
         // 사용자 검색
-        User user = userService.findFirstByUsernameAndSocial(username, Social.USINSA);
+        User user = userService.findFirstByUsernameAndSocial(username.get("username"), Social.USINSA);
 
         // 검증 코드 생성
         VerificationCode verificationCode = verificationCodeService.createCode(user.getId());

@@ -24,14 +24,14 @@ public class MailServiceImpl implements MailService {
 
     private final String FIND_USERNAME_SUBJECT = "[유신사] 입력하신 이메일 주소로 가입된 아이디입니다.";
     private final String FIND_PASSWORD_SUBJECT = "[유신사] 비밀번호 재설정을 위한 주소입니다.";
-    private final String UPDATE_PASSWORD_URL = "<a href='http://localhost:8080/frontend-url?code={code}'>링크</a>";
+    private final String UPDATE_PASSWORD_URL = "<a href='http://localhost:3000/login/update/password/{code}'>링크</a>";
     
     @Async
     @Override
     public void sendMail(EmailSendDto emailSendDto) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("rlawodus518@gmail.com");
+        helper.setFrom("ktechjh@gmail.com");
         helper.setTo(emailSendDto.getTo());
         helper.setSubject(emailSendDto.getSubject());
         helper.setText(emailSendDto.getText(), true);

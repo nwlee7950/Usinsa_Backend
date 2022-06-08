@@ -30,7 +30,7 @@ public class UserRestController {
 
     @ApiOperation(value = "비밀번호 재설정", notes = "비밀번호 재설정 이메일을 발송했을 때 같이 보냈던 code 가 유효하면 새로운 비밀번호로 재설정")
     @PostMapping("/reset-password")
-    public CommonResponse updatePassword(@ModelAttribute UserResetPasswordRequestDto userResetPasswordRequestDto) {
+    public CommonResponse updatePassword(@RequestBody UserResetPasswordRequestDto userResetPasswordRequestDto) {
 
         // 코드 검증
         VerificationCode verificationCode = verificationCodeService.verifyCode(userResetPasswordRequestDto.getCode());
