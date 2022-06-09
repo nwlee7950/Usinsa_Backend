@@ -1,16 +1,22 @@
 package com.spring.usinsa.model.inquiry;
 
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public enum QnaCategory {
+@Builder
+public class QnaCategory {
 
-    EXCHANEGE("교환"),
-    REFUND("환불");
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    String value;
-
+    private String title;
 }

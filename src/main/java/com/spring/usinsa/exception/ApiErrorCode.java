@@ -31,6 +31,7 @@ public enum ApiErrorCode {
     EMAIL_NOT_FOUND(4002, "입력하신 이메일로 가입된 유저가 없습니다."),
     PASSWORD_NOT_EQUAL(4003, "비밀번호가 서로 일치하지 않습니다."),
     VERIFICATION_CODE_EXPIRED(4004, "비밀번호 재설정 유효 시간이 초과되었습니다. 다시 시도해주세요."),
+    USER_ROLE_NOT_PERMISSION_READ(4005, "열람 권한이 없습니다."),
 
     // REGISTER_ROUTE
     REGISTER_ROUTE_NOT_FOUND(5000, "해당 ID를 가진 RegisterRoute 가 없습니다."),
@@ -55,10 +56,18 @@ public enum ApiErrorCode {
 
     //PRODUCT
     PRODUCT_NOT_FOUND(10000, "조회 실패 또는 삭제된 상품입니다."),
+
+    // BRAND
     BRAND_NOT_FOUND(10010, "브랜드 정보를 불러오는데 실패했습니다."),
+
+    //CATEGORY
     CATEGORY_NOT_FOUND(10020, "CATEGORY 정보를 불러오는데 실패했습니다. "),
     CATEGORY_TITLE_DUPLICATED(10021, "이미 존재하는 카테고리 이름이 있습니다."),
-    DeliveryInfo_NOT_FOUND(10030, " 배송 정보를 불러오는데 실패했습니다. "),
+
+    //QNA
+    QNA_NOT_FOUND(10040, "QNA 정보를 불러오는데 실패했습니다."),
+    QNA_CATEGORY_NOT_FOUND(10041, "QNA 카테고리 정보를 불러오는데 실패했습니다."),
+    QNA_ANSWER_NOT_FOUND(10042, "QNA 답글을 불러오는데 실패했습니다."),
 
     TEMP(0, "TEMP");
 

@@ -1,6 +1,6 @@
 package com.spring.usinsa.model.inquiry;
 
-
+import com.spring.usinsa.model.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,12 +11,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QnaImage {
+public class QnaAnswer extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "qna_id")
-    private Long qnaId;
-    private String image;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "qna_id")
+    private Qna qna;
+    private String body;
 }

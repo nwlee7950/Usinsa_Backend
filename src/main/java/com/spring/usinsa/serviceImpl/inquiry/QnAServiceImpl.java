@@ -1,8 +1,12 @@
 package com.spring.usinsa.serviceImpl.inquiry;
 
 import com.spring.usinsa.dto.inquiry.QnADto;
+import com.spring.usinsa.exception.ApiErrorCode;
+import com.spring.usinsa.exception.ApiException;
+import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.inquiry.Qna;
 import com.spring.usinsa.repository.QnARepository;
+import com.spring.usinsa.service.QnACategoryService;
 import com.spring.usinsa.service.QnAService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,32 +17,50 @@ import org.springframework.stereotype.Service;
 @Service
 public class QnAServiceImpl implements QnAService {
 
-    QnARepository qnARepository;
+    private final QnARepository qnARepository;
+    private final QnACategoryService qnACategoryService;
 
     @Override
-    public Qna save(QnADto.Request qnaDto, long userId) {
+    public QnADto.Response findById(Long qnaId, User user) {
+        Qna qna = qnARepository.findById(qnaId)
+                .orElseThrow( () -> new ApiException(ApiErrorCode.QNA_NOT_FOUND));
 
-        return qnARepository.save(qnaDto.toQnaEntity(userId));
+        // 해당 글쓴이 또는 관리자만 열람 가능
+        if(qna.getUserId() != user.getId() && !user.getRoles().stream().anyMatch(role -> role.equals("ROLE_SUPER_ADMIN") ) ){
+            throw new ApiException(ApiErrorCode.USER_ROLE_NOT_PERMISSION_READ);
+        }
+
+        return QnADto.Response.toQnaResponseDto(qna);
     }
 
     @Override
-    public Page<Qna> findByUserId(long userId, Pageable pageable) {
+    public Qna save(QnADto.Request qnaDto) {
+
+        return qnARepository.save(qnaDto.toQnaEntity(qnACategoryService.findById(qnaDto.getQnaCategoryId())));
+    }
+
+    @Override
+    public Page<QnADto.Response> findByUserId(Long userId, Pageable pageable) {
         Page<Qna> qnaPage = qnARepository.findByUserId(userId, pageable);
 
-//        qnaPage.map(m -> new QnADto);
-        return qnaPage;
+        return qnaPage.map(QnADto.Response::toQnaResponseDto);
     }
 
     @Override
-    public void deleteQnaByQnAId(long qnaId) {
+    public Qna findByIdAsEntity(Long id) {
+        return qnARepository.findById(id)
+                .orElseThrow( () -> new ApiException(ApiErrorCode.QNA_NOT_FOUND));
+    }
+
+    @Override
+    public void deleteQnaByQnAId(Long qnaId) {
         qnARepository.deleteById(qnaId);
     }
 
     @Override
-    public Page<Qna> findAll(Pageable pageable) {
-//        Page<Qna> qnaPage = qnARepository.findAll(pageable);
-//        qnaPage.map(m -> new QnADto());
+    public Page<QnADto.Response> findAll(Pageable pageable) {
+        Page<Qna> qnaPage = qnARepository.findAll(pageable);
 
-        return qnARepository.findAll(pageable);
+        return qnaPage.map(QnADto.Response::toQnaResponseDto);
     }
 }
