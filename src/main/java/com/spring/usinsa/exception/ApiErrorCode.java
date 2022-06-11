@@ -69,6 +69,11 @@ public enum ApiErrorCode {
     QNA_CATEGORY_NOT_FOUND(10041, "QNA 카테고리 정보를 불러오는데 실패했습니다."),
     QNA_ANSWER_NOT_FOUND(10042, "QNA 답글을 불러오는데 실패했습니다."),
 
+    //REVIEW
+    REVIEW_NOT_FOUND(11000, "조회 실패 또는 삭제된 리뷰입니다."),
+    REVIEW_DUPLICATED(11010, "이미 같은 상품에 등록한 리뷰가 있습니다."),
+
+
     TEMP(0, "TEMP");
 
 

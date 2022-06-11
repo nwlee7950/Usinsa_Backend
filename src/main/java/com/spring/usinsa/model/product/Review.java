@@ -1,5 +1,6 @@
 package com.spring.usinsa.model.product;
 
+import com.spring.usinsa.model.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Review {
+public class Review extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +21,7 @@ public class Review {
     private Long productId;
     private int point;
     private String body;
-
     private String nickname;
-    private String userImage;
+
+//    private String userImage;
 }
