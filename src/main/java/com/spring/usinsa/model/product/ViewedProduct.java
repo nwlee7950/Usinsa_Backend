@@ -1,6 +1,5 @@
 package com.spring.usinsa.model.product;
 
-import com.spring.usinsa.model.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ public class ViewedProduct{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
     private Long userId;
 
