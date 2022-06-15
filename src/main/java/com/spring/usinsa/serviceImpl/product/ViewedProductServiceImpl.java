@@ -1,5 +1,6 @@
 package com.spring.usinsa.serviceImpl.product;
 
+import com.spring.usinsa.dto.product.RankDto;
 import com.spring.usinsa.dto.product.ViewedProductDto;
 import com.spring.usinsa.model.product.ViewedProduct;
 import com.spring.usinsa.repository.ViewedProductRepository;
@@ -28,6 +29,7 @@ public class ViewedProductServiceImpl implements ViewedProductService {
      * @return list<viewedDto>
      */
     @Override
+    @Transactional
     public List<ViewedProductDto> findByUserId(Long userId) {
         long date = System.currentTimeMillis() - 172800000;
         return viewedProductRepository.findByUserIdAndUpdatedAtGreaterThanOrderByUpdatedAtDesc(userId, date)
@@ -54,4 +56,34 @@ public class ViewedProductServiceImpl implements ViewedProductService {
         }
     }
 
+    @Override
+    @Transactional
+    public List<RankDto> getDailyLank() {
+        long date = System.currentTimeMillis() - 86400000;
+        List<RankDto> result = viewedProductRepositoryCustom.getRankByGreaterThanUpdatedAt(date);
+
+        Long idx = 1l;
+        for ( RankDto rankDto : result ) {
+            rankDto.setRanking(idx++);
+            rankDto.setProduct(productService.findByIdAsEntity(rankDto.getProductId()));
+        }
+
+        return result;
+    }
+
+    // fetch join 후 product를 바로 rankDto에 담아 ranking table에 바로 저장하고 싶지만
+    // querydsl에선 dto로 결과 조회 시 fetch join을 지원하지 않아 product 하나하나 검색하게 되었음
+    @Override
+    public List<RankDto> getEveryTimeLank() {
+        long date = System.currentTimeMillis() - 86400000;
+        List<RankDto> result = viewedProductRepositoryCustom.getRankByGreaterThanUpdatedAt(date);
+
+        Long idx = 1l;
+        for ( RankDto rankDto : result ) {
+            rankDto.setRanking(idx++);
+            rankDto.setProduct(productService.findByIdAsEntity(rankDto.getProductId()));
+        }
+
+        return result;
+    }
 }
