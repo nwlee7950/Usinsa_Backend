@@ -73,6 +73,9 @@ public enum ApiErrorCode {
     REVIEW_NOT_FOUND(11000, "조회 실패 또는 삭제된 리뷰입니다."),
     REVIEW_DUPLICATED(11010, "이미 같은 상품에 등록한 리뷰가 있습니다."),
 
+    //PAYMENT
+    PAYMENT_NOT_FOUND(12000, "결제 정보를 찾지 못했습니다."),
+
 
     TEMP(0, "TEMP");
 
