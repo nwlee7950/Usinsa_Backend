@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 public class RankRequestDto {
 
-    private ProductDto.SimpleResponse product;
+    private ProductDto.Response product;
     private Long count;
     private Long ranking;
 
@@ -19,7 +19,7 @@ public class RankRequestDto {
         return RankRequestDto.builder()
                 .count(rank.getCount())
                 .ranking(rank.getRanking())
-                .product(ProductDto.SimpleResponse.toProductDtoSimpleResponse(rank.getProduct()))
+                .product(ProductDto.Response.toProductDtoResponse(rank.getProduct()))
                 .build();
     }
 }

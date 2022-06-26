@@ -45,7 +45,7 @@ public class RankSchedule {
     /**
      * 매시마다 랭킹 계산 및 저장
      */
-    @Scheduled(cron = "0 * * * * ?")    //  초 분 시간 월 요일
+    @Scheduled(cron = "0 0 * * * ?")    //  초 분 시간 월 요일
     public void scheduleEveryHourRankTask(){
         List<RankDto> result = viewedProductService.getEveryTimeLank();
 

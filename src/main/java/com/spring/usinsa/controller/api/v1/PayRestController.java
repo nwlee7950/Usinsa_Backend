@@ -27,6 +27,7 @@ public class PayRestController {
 
     @PostMapping("/payments")
     public SingleResponse<String> savePayment(@AuthenticationPrincipal User user, PaymentDto.Request paymentDto) throws Exception{
+        paymentDto.setUserId(user.getId());
         String merchantUid  = payService.savePayment(user, paymentDto);
 
         return apiResponseService.getSingleResult(merchantUid);

@@ -2,6 +2,7 @@ package com.spring.usinsa.controller.api.v1;
 
 import com.spring.usinsa.dto.product.ReviewDto;
 import com.spring.usinsa.model.User;
+import com.spring.usinsa.response.CommonResponse;
 import com.spring.usinsa.response.SingleResponse;
 import com.spring.usinsa.service.ReviewService;
 import com.spring.usinsa.serviceImpl.ApiResponseService;
@@ -28,16 +29,17 @@ public class ReviewRestController {
     @PostMapping
     public SingleResponse<ReviewDto.Response> save(@RequestBody ReviewDto.Request reviewDto, @AuthenticationPrincipal User user){
             reviewDto.setNickname(user.getNickname());
+            reviewDto.setUserId(user.getId());
             ReviewDto.Response review = reviewService.save(reviewDto);
 
             return apiResponseService.getSingleResult(review);
     }
 
     @DeleteMapping("/{id}")
-    public SingleResponse<String> deleteById(@PathVariable Long id, @AuthenticationPrincipal User user){
+    public CommonResponse deleteById(@PathVariable Long id, @AuthenticationPrincipal User user){
         reviewService.deleteById(id, user);
 
-        return apiResponseService.getSingleResult("success");
+        return apiResponseService.getSuccessResult();
     }
 
     @GetMapping("/point/{productId}")

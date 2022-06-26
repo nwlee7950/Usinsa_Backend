@@ -57,9 +57,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Float getPointByProductId(Long productId) {
-        Float point = reviewRepository.getPointAvgByProductId(productId);
-        
-        // 소수점 첫째자리까지 나오게 반올림
-        return ((Number)Math.round(point * 10)).floatValue() / 10;
+        try {
+            Float point = reviewRepository.getPointAvgByProductId(productId);
+
+            // 소수점 첫째자리까지 나오게 반올림
+            return  ((Number) Math.round(point * 10)).floatValue() / 10;
+        }catch (Exception e){
+            return 0f;
+        }
     }
 }
