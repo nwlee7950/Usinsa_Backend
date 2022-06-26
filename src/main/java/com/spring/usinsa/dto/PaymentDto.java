@@ -43,6 +43,14 @@ public class PaymentDto {
     }
 
     @Getter
+    @Setter
+    public static class WebhookRequest{
+        private String impUid; // 결제 번호
+        private String merchantUid; // 주문 번호
+        private String status; //상태
+    }
+
+    @Getter
     @Builder
     public static class Response {
         private Long productId;

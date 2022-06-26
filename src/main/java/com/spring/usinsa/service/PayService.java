@@ -17,4 +17,5 @@ public interface PayService {
     String savePayment(User user, PaymentDto.Request paymentDto) throws Exception;
     PaymentDto.Response updateByMerchantUid(PaymentDto.UpdateRequest paymentDto) throws Exception;
     void cancelPayment(PaymentCancelDto.Request paymentCancelDto) throws Exception;
+    void webhookHandler(PaymentDto.WebhookRequest paymentDto) throws Exception;
 }

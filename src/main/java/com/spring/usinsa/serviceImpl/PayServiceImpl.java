@@ -9,7 +9,6 @@ import com.spring.usinsa.model.User;
 import com.spring.usinsa.model.product.Product;
 import com.spring.usinsa.repository.PayRepository;
 import com.spring.usinsa.repository.ProductRepository;
-import com.spring.usinsa.repository.UserRepository;
 import com.spring.usinsa.service.PayService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +26,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -126,6 +123,15 @@ public class PayServiceImpl implements PayService {
         payment.setImpUid(paymentDto.getImpUid());
         payment.setStatus("paid");
         return PaymentDto.Response.toPaymentDtoResponse(payment);
+    }
+
+    @Override
+    public void webhookHandler(PaymentDto.WebhookRequest paymentDto) throws Exception {
+        Payment payment = payRepository.findByMerchantUid(paymentDto.getMerchantUid())
+                .orElseThrow(() -> new ApiException(ApiErrorCode.PAYMENT_NOT_FOUND));
+
+        payment.setImpUid(paymentDto.getImpUid());
+        payment.setStatus(paymentDto.getStatus());
     }
 
     @Override

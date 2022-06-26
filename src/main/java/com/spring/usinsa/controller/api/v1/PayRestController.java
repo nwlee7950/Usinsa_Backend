@@ -40,6 +40,13 @@ public class PayRestController {
         return apiResponseService.getSingleResult(response);
     }
 
+    @PostMapping
+    public CommonResponse webhookHandler(PaymentDto.WebhookRequest paymentDto) throws Exception{
+        payService.webhookHandler(paymentDto);
+
+        return apiResponseService.getSuccessResult();
+    }
+
     @PostMapping("/payments/cancel")
     public CommonResponse cancelPayment(PaymentCancelDto.Request paymentCancelDto) throws Exception{
         payService.cancelPayment(paymentCancelDto);
